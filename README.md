@@ -95,13 +95,40 @@ For a more detailed explanation of how the effects work, see the slave section.
 <Signal processing>
 
 ## Communication description
-MQTT
- Init Comm
- Alive
- Interface Description
-UDP
- Alive
- Interface Description
+### MQTT communication
+MQTT is used for communication between System Master - Music Master and System Master - Slaves. It is used for control and configuration messages.
+This communication protocol has been chosen due to its flexibility, scalability and simplicity. All the logic, abstracted to us, is implemented in the broker. All the information that the clients need to know is the broker IP address and port. This allows a very easy escalation of the network, as new clients may be added without any SW modification (communication-wise).
+MQTT, based on TCP/IP transport protocol, guarantees message delivery (if communication is open) with different QoS (although only QoS 0 is available at the ESP32 with the PubSubClient library). 
+This also allows the system to subscribe to third party events (e.g: light sensor, entrance sensor), giving many possibilities for automation.
+Unfortunately not everything is perfect, and I have observed that the used MQTT library is not 100% stable for the ESP32 (they even mention that in their documentation). This instability is not seen, for example, in the MQTT communication between the System Master and the Music Master.
+This instability implies that, if the system is required to be "responsive" all the time, some additional handling is done at the application level. For this, two protocols are implemented:
+* Init Comm: it can be seen that, although right after booting the ESP32 connects successfully to the MQTT Broker, during the first seconds communication is not possible. Only after a disconnect is detected and reconnection is triggered, events can be received. To ensure that no communication happens until then, the Slave publishes with a regular interval of 2 seconds an Init Comm message identifying itself (MAC address), the System Master must answer this message with the ID assigned to this slave and the current system state.
+  The Slave keeps publishing until a response addressed to this node is received. If no response is received within a minute, the ESP32 will reboot and start again the procedure. The Slave is not ready to be used until this procedure is completed.
+* Alive check: usually once the first communication is established, the library handles it well. Nevertheless it might happen that the communication breaks and the library does not manage to reconnect. To handle this at the application level, the System Master publishes alive events periodically. The Slaves are responsible for checking periodically if these events have arrived within an expected time frame, if they have not arrived, a communication loss is assumed and the Slave will reboot.
+  The Slave also publishes periodically its own Alive message, but this is merely for giving feedback to the user in the Dashboard of what Slaves are online.
+  
+The following table shows the full MQTT interface description:
+Message type |	MQTT topic	| Message content (json format)
+------------ |------------ |------------ 
+Mode Selection | lamp_network/mode_request | mode: mode to set in the slaves \n id_mask: identification of the target nodes [0x00 - 0xFF]
+Brightness | lamp_network/light_intensity | intensity: ?? \n id_mask: identification of the target nodes [0x00 - 0xFF]
+
+### UDP communication
+UDP is the transport protocol used to communicate the Music Master and the Slaves in Music Mode. UDP is a connectionless non-reliable protocol perfect for Streaming communication. It is faster than TCP (less overhead), does not guarantee message delivery and allows multicast.
+This is exactly what we want: a broadcasting streaming technology that sends the information as fast as possible without caring when a packet gets lost, as the audio itself is also lost, and we do not want to see contributions of previous instants in the music effect.
+Thanks to the multicast functionality, we can define a UDP multicast group to which the Master can publish and the slaves can subscribe. This is also great for scalability, shifting the problem of identifying the IP addresses of the slaves to the lower layers of the protocol.
+
+Unfortunately, the advantages of this protocol comes at a price. UDP multicast with WiFi is known to have quite a high packet loss rate, which will make the lamps to seem to be unsynchronized with each other. To reduce the impact of this, each message is sent several times, to ensure that at least one of those packets is received in all the slaves.
+For color streaming messages (payload messages), I have seen that sending them 4 times with a very small delay between them gives a good compromise between performance and quality. Although sometimes all the 4 packets may not arrive at the destination, it happens so rarely that it is not often appreciated in the final effect and therefore, acceptable.
+For configuration or mode change messages, I really need all the slaves to receive them, as otherwise the system will collapse (some slaves listening to UDP, some others to MQTT...). To ensure this, whenever a configuration or mode change message has to be sent, there is a noticeable delay before, to reduce the network load, and then the same message is sent up to 8 times. This reduces the real-time effect of the system until the configuration procedure is complete.
+This mentioned procedure, to overcome the network losses, comes also at a price. The Raspberry Pi 4 generates between 30 and 40 payload messages per second, which implies 40*4 = 160 UDP messages per second. If your router internally does a multicast-unicast conversion, then you are sending 160*N UDP messages per second. In my case with 6 lamps rocking, there are almost 1000 UDP messages / s being sent in your network.
+With my personal setup (router type, router position, number of clients connected to the router...) I appreciate almost no performance issue with 6 lamps in Music Mode and one WiFi speaker playing music. To that setup I also added my TV straming 4K from Netflix via Ethernet cable, without any problem. BUT if you add more load to the wireless network (e.g: 4K Streaming via WiFi, Whatsapp call, additional WiFi speakers synchronized with each other...) then you will immediately appreciate that you are putting your router into some stress.
+If you play with Music Mode while your partner tries to talk with someone via Whatsapp web, assume the consequences :)
+
+Although the UDP communication is very stable, same alive procedure has been implemented as with MQTT, to ensure a reboot in case of error and to inform the user of what lamps are available in Music Mode.
+
+The following table shows the full UDP interface description:
+
  
 ## System Master - User Interface
 The System Master is responsible for the initial configuration of the slaves when they connect to the system, and to give the user a basic interface to interact with the system.
@@ -150,15 +177,15 @@ This unique ID and masking concept is also used in Spectrum mode to assign diffe
 
 Slave mode range description:
 * Basic Modes [0-9]: these are the normal lighting modes. Currently only OFF(0), ON(1) and AMBIENT_LIGHT(2) are implemented:
-** OFF: the leds are completely switched off.
-** ON: the slave acts as a normal lamp. Int this mode, color and intensity can be configured.
-** AMBIENT_LIGHT: the lamp brightness is inversely proportional to the amount of light. This relies on receiving a light amount message from a third party device (see message description).
+  * OFF: the leds are completely switched off.
+  * ON: the slave acts as a normal lamp. Int this mode, color and intensity can be configured.
+  * AMBIENT_LIGHT: the lamp brightness is inversely proportional to the amount of light. This relies on receiving a light amount message from a third party device (see message description).
 * Static effects [10-99]: these are fixed effects that depend only on the configuration parameters (effect delay, effect speed, color...). They are not blocking, and switching between effects can be done at any time. For simplicity, only the effects with a special behavior are explained:
-** <Define>
+  * <Define>
 * Music effects [>99]: these effects depend on music information (amplitude, color, mask) broadcasted by the Music Master via UDP. The effects can also be configured with effect direction (Up, Down, In-Out, Out-In), refreshment rate, base color...:
-** Bubble effect: bubbles of color are shifted in the configured direction with the configured speed. The color, size and speed depend on the music.
-** Bars: a block of leds is switched ON/OFF depending on the music. The amount of leds depends on the amplitude and the color depends on the frequency.
-** Bars color: similar to bars but the color information is not dependent on the frequency but on a fixed color sequence generated from a base color and a color increment for each led. E.g: if the increment is 0, all leds will have the same color when stimulated. The larger the increment, the bigger the color difference between two consecutive leds when stimulated.
+  * Bubble effect: bubbles of color are shifted in the configured direction with the configured speed. The color, size and speed depend on the music.
+  * Bars: a block of leds is switched ON/OFF depending on the music. The amount of leds depends on the amplitude and the color depends on the frequency.
+  * Bars color: similar to bars but the color information is not dependent on the frequency but on a fixed color sequence generated from a base color and a color increment for each led. E.g: if the increment is 0, all leds will have the same color when stimulated. The larger the increment, the bigger the color difference between two consecutive leds when stimulated.
 
 ## Alexa compatibility
 Talking about lights, it is very useful to being able to control it with voice commands.
@@ -168,36 +195,36 @@ For simplicity I control the lamps as a group, but it is of course possible to s
 Please don't forget to add your own keys and device ID to the script. There are many great tutorials on the internet to do this.
 
 ## Installation and configuration
-System Master installation
- # Installation of Node Red (<link>)
- # Installation of Dashboard (<link>)
- # Installation to Mosquitto (<link>)
- # Clone the code of the System Master
- # Import modules in Node Red
- # Configure the Node Red Modules:
- ## How many lamps you want to use
- ## Map their MAC addresses to a fixed ID
- ## Give meaningful names in the Dashboard
+### System Master installation
+ * Installation of Node Red (<link>)
+ * Installation of Dashboard (<link>)
+ * Installation to Mosquitto (<link>)
+ * Clone the code of the System Master
+ * Import modules in Node Red
+ * Configure the Node Red Modules:
+   * How many lamps you want to use
+   * Map their MAC addresses to a fixed ID
+   * Give meaningful names in the Dashboard
 
-Music Master installation
- # Clone the code of the Music Master
- # Install dependencies (python)
- # Create a system service for automatic start of the module after boot (optional but recommended)
- # Music Master configuration (in config.py): IP addresses, ports...
- # Installation test: the best way to test that all the libraries are good installed, is to enable the GUI and execute the module, then use the System Master to set the system to music node, and see if everything works fine.
+### Music Master installation
+ * Clone the code of the Music Master
+ * Install dependencies (python)
+ * Create a system service for automatic start of the module after boot (optional but recommended)
+ * Music Master configuration (in config.py): IP addresses, ports...
+ * Installation test: the best way to test that all the libraries are good installed, is to enable the GUI and execute the module, then use the System Master to set the system to music node, and see if everything works fine.
 
-Slaves installation
- # Get ready your Arduino environment to flash the code to the ESP32(s). This is only needed for the first time you flash the code (see below). Link to tutorial to do this?
- # Configure in the source code (OTA Updater) the Username and Password for the OTA software update.
- # Add your personal configuration to the source code (config.h): networking must match with the Music Master, MQTT broker config, debug traces, timing... 
- # Flash the code to your ESP32.
- # For further flashing with OTA:
- ## Use a web browser to access the URL of your slave. By default the url is "http://lamp<id>.local". E.g("http:/lamp1.local"). Where the ID is the unique identifier assigned to the ESP32 MAC address and shared through Init Comm.
- ## Enter username and password.
- ## Select the new binary code and press upload.
+### Slaves installation
+ * Get ready your Arduino environment to flash the code to the ESP32(s). This is only needed for the first time you flash the code (see below). Link to tutorial to do this?
+ * Configure in the source code (OTA Updater) the Username and Password for the OTA software update.
+ * Add your personal configuration to the source code (config.h): networking must match with the Music Master, MQTT broker config, debug traces, timing... 
+ * Flash the code to your ESP32.
+ * For further flashing with OTA:
+   * Use a web browser to access the URL of your slave. By default the url is "http://lamp<id>.local". E.g("http:/lamp1.local"). Where the ID is the unique identifier assigned to the ESP32 MAC address and shared through Init Comm.
+   * Enter username and password.
+   * Select the new binary code and press upload.
 
-Alexa compatibility (optional)
- # Create a system service for automatic start of the module after boot. (optional but recommended). It can also be started manually as a normal python script. It can be deployed in any machine connected to the network.
+### Alexa compatibility (optional)
+ * Create a system service for automatic start of the module after boot. (optional but recommended). It can also be started manually as a normal python script. It can be deployed in any machine connected to the network.
 
  
 ## User guide
@@ -237,12 +264,16 @@ To exit music mode, just select the target effect in either of the mode widgets.
 
 5. Alexa control
 For what I have tested and implemented, it is possible to say:
-# Alexa, switch the lamps ON/OFF (this is also useful to exit music mode without using the Dashboard).
-# Alexa, switch ON music mode. This will set the lamps in "Bars Color" mode, with "Energy" method and a pre-defined configuration parameters that are ready to start immediately displaying the effects with no further configuration.
-# Alexa, set the lamp to color X.
-# Alexa, set the lamp to intensity X%.
+* Alexa, switch the lamps ON/OFF (this is also useful to exit music mode without using the Dashboard).
+* Alexa, switch ON music mode. This will set the lamps in "Bars Color" mode, with "Energy" method and a pre-defined configuration parameters that are ready to start immediately displaying the effects with no further configuration.
+* Alexa, set the lamp to color X.
+* Alexa, set the lamp to intensity X%.
 
 ## Demo
 
+
+
+## Future improvements
+* Remove hard-coded logic from Node-Red: create system description file where the MAC-ID mapping is described, lamp names, Alive communication delays...
 
 
