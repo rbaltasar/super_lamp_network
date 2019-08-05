@@ -109,10 +109,21 @@ This instability implies that, if the system is required to be "responsive" all 
   
 The following table shows the full MQTT interface description:
 
-| Message type |	MQTT topic	| Message content (json format) |
-| ------------ |------------ |------------ |
-| Mode Selection | lamp_network/mode_request | mode: mode to set in the slaves <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
-| Brightness | lamp_network/light_intensity | intensity: ?? <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
+| Message type |	MQTT topic	| Message direction | Message content (json format) |
+| ------------ |------------ |------------ |------------ |
+| Mode selection | lamp_network/mode_request | System Master --> Slave <br> System Master --> Music Master| mode: target mode <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
+| Brightness | lamp_network/light_intensity | System Master --> Slave | intensity: ?? <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
+| Effect delay | lamp_network/effect_delay | System Master --> Slave |delay: ?? [0-100] tens of milliseconds <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
+| Effect speed | lamp_network/effect_speed | System Master --> Slave | speed: ?? [0-100] ?? <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
+| Light color | lamp_network/light_color | System Master --> Slave | R: red contribution [0-255] <br> G: green contribution [0-255] <br> B: blue contribution [0-255] <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
+| Init comm Tx | lamp_network/initcomm_tx | Slave --> System Master | mac: slave's MAC address (unique identifier) <br> ip: slave's IP address <br> rst_0: reset reason core 0 <br> rst_1: reset reason core 1 |
+| Init comm Rx | lamp_network/initcommrx | System Master --> Slave | mac: MAC address of the target slave <br> id: unique ID of the slave <br> mode: mode to switch after init complete |
+| Alive Tx | lamp_network/alive_tx | Slave --> System Master | id: unique ID of the slave |
+| Alive Rx | lamp_network/alive_rx | System Master --> Slave | empty message |
+| Light amount | livingroom_node/light | 3rd party light sensor --> Slave | light: light amount in Lx |
+| Music configuration | lamp_network_music/configuration | System Master --> Music Master | update_rate: effect update rate in the slave <br> effect_direction: direction of the effect <br> num_lamps: number of Slaves <br> num_freq_windows: number of windows to split the spectrum <br> base_color_r: red contribution base color <br> base_color_g: green contribution base color <br> base_color_b: blue contribution base color <br> color_increment: single step for color generation <br> effect_type: signal processing method <br> freq_window_1: window for slave 1 <br> freq_window_2: window for slave 2 <br> freq_window_3: window for slave 3 <br> freq_window_4: window for slave 4 <br> freq_window_5: window for slave 5 <br> freq_window_6: window for slave 6 |
+
+Please note that the message direction is just how it is used currently in the project, but any MQTT client connected to your network could subscribe/publish those topics to extend or add current features (e.g: a node that checks for rain on the internet and when it is raining, switch the lamps to blue, why not?).
 
 ### UDP communication
 UDP is the transport protocol used to communicate the Music Master and the Slaves in Music Mode. UDP is a connectionless non-reliable protocol perfect for Streaming communication. It is faster than TCP (less overhead), does not guarantee message delivery and allows multicast.
@@ -129,8 +140,15 @@ If you play with Music Mode while your partner tries to talk with someone via Wh
 Although the UDP communication is very stable, same alive procedure has been implemented as with MQTT, to ensure a reboot in case of error and to inform the user of what lamps are available in Music Mode.
 
 The following table shows the full UDP interface description:
+| Message type |	Message description (byte stream - in order). 1 byte per parameter |
+| ------------ | ------------ |
+| Mode selection | message_id: Change the mode in the slaves. Val: 0x00 <br> mode: target mode |
+| Sync request | message_id: Request synchronization in the slaves. Val: 0x01 <br> delay: synchronization delay (default is 0) |
+| Payload single | message_id: Current music-color information with single payload. Val: 0x04 <br> mask: identification of the target nodes <br> r: red contribution <br> g: green contribution <br> b: blue contribution <br> ampl: amplitude |
+| Payload multiple | message_id: Current music-color information with one payload for each slave. Val: 0x05 <br> size: number of payloads <br> payload (r,g,b,ampl)[size]: array of payloads addressed to different lamps |
+| Configuration | message_id: Configuration message. Val: 0x07 <br> update_rate: effect update rate in the slave <br> effect_direction: direction of the effect <br> r: red contribution base color <br> g: green contribution base color <br> b: blue contribution base color <br> increment: single step for color generation |
 
- 
+
 ## System Master - User Interface
 The System Master is responsible for the initial configuration of the slaves when they connect to the system, and to give the user a basic interface to interact with the system.
 It is also responsible to handle the alive checks with the slaves, displaying in the GUI what lamps are connected and ensuring that the communication channel is always open and reactive.
@@ -276,5 +294,9 @@ For what I have tested and implemented, it is possible to say:
 
 ## Future improvements
 * Remove hard-coded logic from Node-Red: create system description file where the MAC-ID mapping is described, lamp names, Alive communication delays...
+
+
+
+
 
 
