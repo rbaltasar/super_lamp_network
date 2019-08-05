@@ -108,10 +108,10 @@ This instability implies that, if the system is required to be "responsive" all 
   The Slave also publishes periodically its own Alive message, but this is merely for giving feedback to the user in the Dashboard of what Slaves are online.
   
 The following table shows the full MQTT interface description:
-Message type |	MQTT topic	| Message content (json format)
------------- |------------ |------------ 
-Mode Selection | lamp_network/mode_request | mode: mode to set in the slaves id_mask: identification of the target nodes (0x00 - 0xFF)
-Brightness | lamp_network/light_intensity | intensity: ?? id_mask: identification of the target nodes (0x00 - 0xFF)
+Message type |	MQTT topic	| Message content (json format) |
+------------ |------------ |------------ |
+Mode Selection | lamp_network/mode_request | mode: mode to set in the slaves id_mask: identification of the target nodes (0x00 - 0xFF) |
+Brightness | lamp_network/light_intensity | intensity: ?? \n id_mask: identification of the target nodes (0x00 - 0xFF) |
 
 ### UDP communication
 UDP is the transport protocol used to communicate the Music Master and the Slaves in Music Mode. UDP is a connectionless non-reliable protocol perfect for Streaming communication. It is faster than TCP (less overhead), does not guarantee message delivery and allows multicast.
