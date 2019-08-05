@@ -108,6 +108,7 @@ This instability implies that, if the system is required to be "responsive" all 
   The Slave also publishes periodically its own Alive message, but this is merely for giving feedback to the user in the Dashboard of what Slaves are online.
   
 The following table shows the full MQTT interface description:
+
 | Message type |	MQTT topic	| Message content (json format) |
 | ------------ |------------ |------------ |
 | Mode Selection | lamp_network/mode_request | mode: mode to set in the slaves id_mask: identification of the target nodes (0x00 - 0xFF) |
