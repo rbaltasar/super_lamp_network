@@ -250,39 +250,39 @@ Please don't forget to add your own keys and device ID to the script. There are 
 ## User guide
 Until now I have described what is possible and how things are done. Here I will explain more from a use perspective, how to use the lamps:
 
-1. Starting the system.
-Once the installation and configuration has been done, both masters are up and running, the lamps hardware is ready and the software is flashed in the ESP32(s), we can connect the lamp to the current.
-If everything goes right, 1/3 of the LEDs will switch to green when the WiFi connection is established and 2/3 of the LEDs will switch to green when the MQTT connection is established. If this does not happen, you may want to check your configuration (e.g: WiFi name, password, MQTT IP address and port...). You can always enable the debug traces in the software (config.h) and try to guess what is going wrong.
-The lamp will display 2/3 of green leds until the Init Comm procedure is finished, the lamp has open communication with the System Master and it has received its initial configuration. Then it will automatically switch to the current mode that you have defined in your Dashboard.
-If for some reason the communication can't be established, the Slave will reboot after 1 minute and try again.
+1. **Starting the system.** <br>
+* Once the installation and configuration has been done, both masters are up and running, the lamps hardware is ready and the software is flashed in the ESP32(s), we can connect the lamp to the current.
+* If everything goes right, 1/3 of the LEDs will switch to green when the WiFi connection is established and 2/3 of the LEDs will switch to green when the MQTT connection is established. If this does not happen, you may want to check your configuration (e.g: WiFi name, password, MQTT IP address and port...). You can always enable the debug traces in the software (config.h) and try to guess what is going wrong.
+* The lamp will display 2/3 of green leds until the Init Comm procedure is finished, the lamp has open communication with the System Master and it has received its initial configuration. Then it will automatically switch to the current mode that you have defined in your Dashboard.
+* If for some reason the communication can't be established, the Slave will reboot after 1 minute and try again.
 
-2. Basic light control and static effects
-Open a web browser from any client you want (Smartphone, Laptop, Tablet...) and go to the IP address of your Dashboard. Tip: in Android and iOS it is possible to bookmark a URL and keep a direct access in your desktop, so it actually looks like an app.
-Go to the "Livingroom Lamps" option in the upper left menu (or however you have called it).
-For each individual lamp (for me for simplicity I just gave them a number, but it can be changed in Node-Red with meaningful names if you want), you can switch it ON/OFF, change the color and the intensity, and define whether the lamp will be included in group control or not. You can also see whether the lamp is Online of Offline.
-On the top of this window, a set of group control widgets can be seen, and as their name say, they will affect only the lamps that have their own group control activated.
-Here we can change the intensity and color of all the lamps together, as well as the mode they work with.
-In the mode widget, we can select any basic mode and static effect mode. Any mode that is not just ON/OFF can only be set as a group and not individually (for simplicity). It may be possible nevertheless to set a few lamps in group mode, then set them into a desired mode (e.g: ON), then put another lamps in group mode and set them into another desired mode (e.g: Ambient Light).
-If you select a static effect, you can play with the configuration parameters to change the color, speed, delay between iterations... Not all the effects are affected by all these configuration parameters. The best way to figure it out is to just try it out until you find an effect you like.
+2. **Basic light control and static effects.** <br>
+* Open a web browser from any client you want (Smartphone, Laptop, Tablet...) and go to the IP address of your Dashboard. Tip: in Android and iOS it is possible to bookmark a URL and keep a direct access in your desktop, so it actually looks like an app.
+* Go to the "Livingroom Lamps" option in the upper left menu (or however you have called it).
+* For each individual lamp (for me for simplicity I just gave them a number, but it can be changed in Node-Red with meaningful names if you want), you can switch it ON/OFF, change the color and the intensity, and define whether the lamp will be included in group control or not. You can also see whether the lamp is Online of Offline.
+* On the top of this window, a set of group control widgets can be seen, and as their name say, they will affect only the lamps that have their own group control activated.
+* Here we can change the intensity and color of all the lamps together, as well as the mode they work with.
+* In the mode widget, we can select any basic mode and static effect mode. Any mode that is not just ON/OFF can only be set as a group and not individually (for simplicity). It may be possible nevertheless to set a few lamps in group mode, then set them into a desired mode (e.g: ON), then put another lamps in group mode and set them into another desired mode (e.g: Ambient Light).
+* If you select a static effect, you can play with the configuration parameters to change the color, speed, delay between iterations... * Not all the effects are affected by all these configuration parameters. The best way to figure it out is to just try it out until you find an effect you like.
 
-3. Lamp connection troubleshooting
-If the lamp is Offline it means that no Alive communication is received and therefore, the MQTT communication is somehow not working. This is actually the state in which the lamps are expected to be when they are in music mode, so no alarm in this case. If, on the other hand, they are supposed to be in normal mode but they are still Offline, it may be a real issue in the communication.
-The lamps are designed to reboot when Alive communication is lost. Nevertheless I have seen that very rarely the lamps lose communication but do not reboot as expected. I am still working on figuring out the reason for this. In the mean time if this happens, a manual reboot (unplug and plug from the socket) will do.
+3. **Lamp connection troubleshooting.** <br>
+* If the lamp is Offline it means that no Alive communication is received and therefore, the MQTT communication is somehow not working. This is actually the state in which the lamps are expected to be when they are in music mode, so no alarm in this case. If, on the other hand, they are supposed to be in normal mode but they are still Offline, it may be a real issue in the communication.
+* The lamps are designed to reboot when Alive communication is lost. Nevertheless I have seen that very rarely the lamps lose communication but do not reboot as expected. I am still working on figuring out the reason for this. In the mean time if this happens, a manual reboot (unplug and plug from the socket) will do.
 
-4. Music effects
-Go to the "Music effects" option in the upper left menu.
-You will find there another mode widget to select the music mode you want. You may also select OFF to stop the music mode without the need to switch to the other menu.
-Once you have selected the music mode, the Music Master and the Slaves will start their communication. After this moment, you can no longer communicate directly with the Slaves in the "Livingroom Lamps" window (e.g: change color, switch ON/OFF individually) until you set a non-music mode in either of the available mode widgets.
-When a music mode is selected, only the mode is updated, all the other configuration properties (delays, base color, method...) will remain with the lates configuration value, or by default, if the system was recently rebooted/restarted. If the system behaves a little bit weird or does nothing at all, might happen that it is still not configured or the configuration it has is something wrong.
-Set the configuration parameters in the want. All the configuration is sent in one message when the "Configure" button is pressed, so do not worry if you change the method but nothing happens. Once you have configured your effect, press the button to send the configuration.
-Hint: for optimization reasons, a new color pattern is generated when the base color is changed. If you try to change the colors (for Bars Color mode or Spectrum method) and, after pressing "Configure" nothing happens, try to change the base color and the color increment.
-If you want to play wit the Spectrum method, you will need to define in how many windows you want to split the spectrum. If you set this to 1, the spectrum will not be split. Once you have selected this, you may select, for each slave, what frequency window it shall display.
-Due to limitations in the Dashboard, I can't limit the frequency window assigned to each slave depending on the total amount of windows, so it is possible that you define 2 windows for example but assign to a slave the window 3, then of course this slave will display nothing.
-In music mode there is also Alive communication, and therefore it is possible to see what Slaves are currently online in this mode.
+4. **Music effects.** <br>
+* Go to the "Music effects" option in the upper left menu.
+* You will find there another mode widget to select the music mode you want. You may also select OFF to stop the music mode without the need to switch to the other menu.
+* Once you have selected the music mode, the Music Master and the Slaves will start their communication. After this moment, you can no longer communicate directly with the Slaves in the "Livingroom Lamps" window (e.g: change color, switch ON/OFF individually) until you set a non-music mode in either of the available mode widgets.
+* When a music mode is selected, only the mode is updated, all the other configuration properties (delays, base color, method...) will remain with the lates configuration value, or by default, if the system was recently rebooted/restarted. If the system behaves a little bit weird or does nothing at all, might happen that it is still not configured or the configuration it has is something wrong.
+* Set the configuration parameters in the want. All the configuration is sent in one message when the "Configure" button is pressed, so do not worry if you change the method but nothing happens. Once you have configured your effect, press the button to send the configuration.
+* Hint: for optimization reasons, a new color pattern is generated when the base color is changed. If you try to change the colors (for Bars Color mode or Spectrum method) and, after pressing "Configure" nothing happens, try to change the base color and the color increment.
+* If you want to play wit the Spectrum method, you will need to define in how many windows you want to split the spectrum. If you set this to 1, the spectrum will not be split. Once you have selected this, you may select, for each slave, what frequency window it shall display.
+* Due to limitations in the Dashboard, I can't limit the frequency window assigned to each slave depending on the total amount of windows, so it is possible that you define 2 windows for example but assign to a slave the window 3, then of course this slave will display nothing.
+* In music mode there is also Alive communication, and therefore it is possible to see what Slaves are currently online in this mode.
 Be aware that music mode is entered via mode switch and therefore, only the slaves in group control will switch to this mode.
-To exit music mode, just select the target effect in either of the mode widgets.
+* To exit music mode, just select the target effect in either of the mode widgets.
 
-5. Alexa control
+5. **Alexa control**
 For what I have tested and implemented, it is possible to say:
 * Alexa, switch the lamps ON/OFF (this is also useful to exit music mode without using the Dashboard).
 * Alexa, switch ON music mode. This will set the lamps in "Bars Color" mode, with "Energy" method and a pre-defined configuration parameters that are ready to start immediately displaying the effects with no further configuration.
