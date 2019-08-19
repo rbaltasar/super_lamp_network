@@ -165,12 +165,12 @@ The following table shows the full UDP interface description:
 
 | Message type |	Message description (byte stream - in order). 1 byte per parameter |
 | ------------ | ------------ |
-| Mode selection | message_id: Change the mode in the slaves. Val: 0x00 <br> mode: target mode |
-| Sync request | message_id: Request synchronization in the slaves. Val: 0x01 <br> delay: synchronization delay (default is 0) |
-| Payload single | message_id: Current music-color information with single payload. Val: 0x04 <br> mask: identification of the target nodes <br> r: red contribution <br> g: green contribution <br> b: blue contribution <br> ampl: amplitude |
-| Payload multiple | message_id: Current music-color information with one payload for each slave. Val: 0x05 <br> size: number of payloads <br> payload (r,g,b,ampl)[size]: array of payloads addressed to different lamps |
-| Configuration | message_id: Configuration message. Val: 0x07 <br> update_rate: effect update rate in the slave <br> effect_direction: direction of the effect <br> r: red contribution base color <br> g: green contribution base color <br> b: blue contribution base color <br> increment: single step for color generation |
-| Alive check (Rx) | node_id: Unique identifier of the sender node |
+| Mode selection | **message_id**: Change the mode in the slaves. Val: 0x00 <br> **mode**: target mode |
+| Sync request | **message_id**: Request synchronization in the slaves. Val: 0x01 <br> **delay**: synchronization delay (default is 0) |
+| Payload single | **message_id**: Current music-color information with single payload. Val: 0x04 <br> **mask**: identification of the target nodes <br> **r**: red contribution <br> **g**: green contribution <br> **b**: blue contribution <br> **ampl**: amplitude |
+| Payload multiple | **message_id**: Current music-color information with one payload for each slave. Val: 0x05 <br> **size**: number of payloads <br> **payload (r,g,b,ampl)[size]**: array of payloads addressed to different lamps |
+| Configuration | **message_id**: Configuration message. Val: 0x07 <br> **update_rate**: effect update rate in the slave <br> **effect_direction**: direction of the effect <br> **r**: red contribution base color <br> **g**: green contribution base color <br> **b**: blue contribution base color <br> **increment**: single step for color generation |
+| Alive check (Rx) | **node_id**: Unique identifier of the sender node |
 
 
 ## System Master - User Interface
