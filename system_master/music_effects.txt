@@ -1,0 +1,1213 @@
+[
+    {
+        "id": "f70b46dd.a85ff8",
+        "type": "tab",
+        "label": "Music effects",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "a45d3c4.53516c",
+        "type": "ui_dropdown",
+        "z": "f70b46dd.a85ff8",
+        "name": "Mode",
+        "label": "Music mode",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "443be225.5df6ac",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "options": [
+            {
+                "label": "OFF",
+                "value": "1",
+                "type": "str"
+            },
+            {
+                "label": "BUBBLE",
+                "value": "100",
+                "type": "str"
+            },
+            {
+                "label": "BAR",
+                "value": "101",
+                "type": "str"
+            },
+            {
+                "label": "BAR COLOR",
+                "value": "102",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 1030,
+        "y": 160,
+        "wires": [
+            [
+                "fa0171c5.9aa7b"
+            ]
+        ]
+    },
+    {
+        "id": "fa0171c5.9aa7b",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "var mask = global.get(\"lamp_network_mask\") || 0;\n\nglobal.set(\"lamp_network_state\",msg.payload);\n\nvar mode = msg.payload;\n\nmsg = {payload:\n      {\n        mode:mode,\n        id_mask:mask\n      }}\n     \n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1280,
+        "y": 160,
+        "wires": [
+            [
+                "3f1eed9f.755012",
+                "15ce37c4.46a128"
+            ]
+        ]
+    },
+    {
+        "id": "3f1eed9f.755012",
+        "type": "mqtt out",
+        "z": "f70b46dd.a85ff8",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1540,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "976aaef4.e3f39",
+        "type": "ui_dropdown",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "label": "Effect direction",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "443be225.5df6ac",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "options": [
+            {
+                "label": "UP",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "DOWN",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "IN-OUT",
+                "value": 2,
+                "type": "num"
+            },
+            {
+                "label": "OUT-IN",
+                "value": "3",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 880,
+        "y": 400,
+        "wires": [
+            [
+                "8ab39212.4f5868"
+            ]
+        ]
+    },
+    {
+        "id": "69ea4ba3.3cdab4",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "group": "443be225.5df6ac",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "label": "Send configuration",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 890,
+        "y": 780,
+        "wires": [
+            [
+                "912cdac8.11cfe8"
+            ]
+        ]
+    },
+    {
+        "id": "f987dad2.ec21b8",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "masked_val = msg.payload & 1\n\nif(masked_val == 1)\n{\n    msg = {topic: \"MUSIC\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 1\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 680,
+        "y": 1000,
+        "wires": [
+            [
+                "35973eb0.3ee032"
+            ]
+        ]
+    },
+    {
+        "id": "35973eb0.3ee032",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "Online",
+        "group": "88aa0fb0.e86da",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 850,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fdf6f447.dacc58",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "masked_val = (msg.payload >> 1) & 1\n\nif(masked_val == 1)\n{\n    msg = {topic: \"MUSIC\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 1\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 660,
+        "y": 1260,
+        "wires": [
+            [
+                "a3206ec9.5de71"
+            ]
+        ]
+    },
+    {
+        "id": "a3206ec9.5de71",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "Online",
+        "group": "72cb93f7.276bbc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 830,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2d3445d4.0f5fca",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Frequency window lamp 1",
+        "label": "Frequency window",
+        "tooltip": "",
+        "group": "88aa0fb0.e86da",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 730,
+        "y": 1080,
+        "wires": [
+            [
+                "7a5bf55e.eed21c"
+            ]
+        ]
+    },
+    {
+        "id": "1e321f0f.d40161",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Frequency window lamp 2",
+        "label": "Frequency window",
+        "tooltip": "",
+        "group": "72cb93f7.276bbc",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 730,
+        "y": 1320,
+        "wires": [
+            [
+                "f1dac37f.1df6d8"
+            ]
+        ]
+    },
+    {
+        "id": "e7ee0fde.b6c01",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "masked_val = (msg.payload >> 2) & 1\n\nif(masked_val == 1)\n{\n    msg = {topic: \"MUSIC\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 1\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1160,
+        "y": 1000,
+        "wires": [
+            [
+                "b879085b.e408c8"
+            ]
+        ]
+    },
+    {
+        "id": "b879085b.e408c8",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "Online",
+        "group": "d3f31796.d89918",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 1330,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "777c6b2.ba65d94",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "masked_val = (msg.payload >> 3) & 1\n\nif(masked_val == 1)\n{\n    msg = {topic: \"MUSIC\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 1\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1140,
+        "y": 1260,
+        "wires": [
+            [
+                "e529dcb4.6971d"
+            ]
+        ]
+    },
+    {
+        "id": "e529dcb4.6971d",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "Online",
+        "group": "937a62c9.6963a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 1310,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a127771.3e2648",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Frequency window lamp 3",
+        "label": "Frequency window",
+        "tooltip": "",
+        "group": "d3f31796.d89918",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 1230,
+        "y": 1080,
+        "wires": [
+            [
+                "f3042ee3.49e458"
+            ]
+        ]
+    },
+    {
+        "id": "c71278f0.8c06f8",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Frequency window lamp 4",
+        "label": "Frequency window",
+        "tooltip": "",
+        "group": "937a62c9.6963a",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 1230,
+        "y": 1320,
+        "wires": [
+            [
+                "fd343f40.f2afe"
+            ]
+        ]
+    },
+    {
+        "id": "d74bd7a2.f5b1b8",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "masked_val = (msg.payload >> 4) & 1\n\nif(masked_val == 1)\n{\n    msg = {topic: \"MUSIC\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 1\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1660,
+        "y": 1000,
+        "wires": [
+            [
+                "68ba9cfe.346b34"
+            ]
+        ]
+    },
+    {
+        "id": "68ba9cfe.346b34",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "Online",
+        "group": "8d64539a.17168",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 1830,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8236047c.0beb78",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "masked_val = (msg.payload >> 5) & 1\n\nif(masked_val == 1)\n{\n    msg = {topic: \"MUSIC\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 1\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1640,
+        "y": 1260,
+        "wires": [
+            [
+                "570e977b.ade698"
+            ]
+        ]
+    },
+    {
+        "id": "570e977b.ade698",
+        "type": "ui_button",
+        "z": "f70b46dd.a85ff8",
+        "name": "Online",
+        "group": "c5bcf318.01edc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 1810,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6e6f2377.4146cc",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Frequency window lamp 5",
+        "label": "Frequency window",
+        "tooltip": "",
+        "group": "8d64539a.17168",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 1730,
+        "y": 1080,
+        "wires": [
+            [
+                "592d8125.37f89"
+            ]
+        ]
+    },
+    {
+        "id": "b3d90515.bd8258",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Frequency window lamp 6",
+        "label": "Frequency window",
+        "tooltip": "",
+        "group": "c5bcf318.01edc",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 1710,
+        "y": 1320,
+        "wires": [
+            [
+                "c8520140.eb3fa8"
+            ]
+        ]
+    },
+    {
+        "id": "8ab39212.4f5868",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "\nflow.set(\"effect_direction\",msg.payload);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1100,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "912cdac8.11cfe8",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "var min_freq = flow.get(\"min_freq\");\nvar max_freq = flow.get(\"max_freq\");\nvar effect_direction = flow.get(\"effect_direction\");\nvar effect_delay = flow.get(\"effect_delay\");\nvar num_freq_windows = flow.get(\"num_freq_windows\");\nvar num_lamps = 6;\nvar base_color_r = flow.get(\"base_color_r\");\nvar base_color_g = flow.get(\"base_color_g\");\nvar base_color_b = flow.get(\"base_color_b\");\nvar color_increment = flow.get(\"color_increment\");\nvar effect_type = flow.get(\"effect_type\");\nvar freq_window_1 = flow.get(\"freq_wind_1\");\nvar freq_window_2 = flow.get(\"freq_wind_2\");\nvar freq_window_3 = flow.get(\"freq_wind_3\");\nvar freq_window_4 = flow.get(\"freq_wind_4\");\nvar freq_window_5 = flow.get(\"freq_wind_5\");\nvar freq_window_6 = flow.get(\"freq_wind_6\");\n\nmsg = {payload:\n      {\n        min_freq:min_freq,\n        max_freq:max_freq,\n        effect_delay:effect_delay,\n        effect_direction:effect_direction,\n        num_lamps:num_lamps,\n        num_freq_windows:num_freq_windows,\n        base_color_r:base_color_r,\n        base_color_g:base_color_g,\n        base_color_b:base_color_b,\n        color_increment:color_increment,\n        effect_type:effect_type,\n        freq_window_1:freq_window_1,\n        freq_window_2:freq_window_2,\n        freq_window_3:freq_window_3,\n        freq_window_4:freq_window_4,\n        freq_window_5:freq_window_5,\n        freq_window_6:freq_window_6\n      }}\n     \n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1120,
+        "y": 780,
+        "wires": [
+            [
+                "3774de1f.d252a2",
+                "30971d6b.9dec4a"
+            ]
+        ]
+    },
+    {
+        "id": "3774de1f.d252a2",
+        "type": "mqtt out",
+        "z": "f70b46dd.a85ff8",
+        "name": "Lamp mode request",
+        "topic": "lamp_network_music/configuration",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1380,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "1a94a21.3078cde",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "\nflow.set(\"effect_delay\",msg.payload);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1120,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "634ee572.aee514",
+        "type": "ui_slider",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "label": "Effect delay",
+        "tooltip": "",
+        "group": "443be225.5df6ac",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": "10",
+        "max": "100",
+        "step": "5",
+        "x": 870,
+        "y": 600,
+        "wires": [
+            [
+                "1a94a21.3078cde"
+            ]
+        ]
+    },
+    {
+        "id": "25b60eb7.d1553a",
+        "type": "ui_colour_picker",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "label": "Base color",
+        "group": "443be225.5df6ac",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": true,
+        "showHue": true,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 870,
+        "y": 660,
+        "wires": [
+            [
+                "c9189f98.770e9"
+            ]
+        ]
+    },
+    {
+        "id": "c9189f98.770e9",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "\nflow.set(\"base_color_r\",msg.payload.r);\nflow.set(\"base_color_g\",msg.payload.g);\nflow.set(\"base_color_b\",msg.payload.b);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1120,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7c9dec22.61fe0c",
+        "type": "ui_slider",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "label": "Static color increment",
+        "tooltip": "",
+        "group": "443be225.5df6ac",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": "0",
+        "max": "20",
+        "step": "1",
+        "x": 900,
+        "y": 720,
+        "wires": [
+            [
+                "fd3fe6d3.8d9658"
+            ]
+        ]
+    },
+    {
+        "id": "fd3fe6d3.8d9658",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "\nflow.set(\"color_increment\",msg.payload);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1120,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d6ce6e14.4a0bf",
+        "type": "ui_dropdown",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "label": "Method",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "443be225.5df6ac",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "options": [
+            {
+                "label": "SCROLL",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "ENERGY",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "SPECTRUM",
+                "value": "3",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 860,
+        "y": 340,
+        "wires": [
+            [
+                "573b51f0.68c3"
+            ]
+        ]
+    },
+    {
+        "id": "573b51f0.68c3",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Parse message",
+        "func": "\nflow.set(\"effect_type\",msg.payload);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1100,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e22a551e.612f78",
+        "type": "mqtt in",
+        "z": "f70b46dd.a85ff8",
+        "name": "Start music mode",
+        "topic": "music_node/start",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 360,
+        "y": 280,
+        "wires": [
+            [
+                "21a3d65f.f86952",
+                "c20c21ed.295d",
+                "15ebffee.d4faf8"
+            ]
+        ]
+    },
+    {
+        "id": "21a3d65f.f86952",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Start music mode",
+        "func": "\nvar mask\nif(msg.payload == \"1\")\n{\n    mask = 48\n}\nelse if(msg.payload == \"0\")\n{\n    mask = 255\n}\n\nmsg = {payload:\n      {\n        mode: 102,\n        id_mask:mask\n      }};\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "a45d3c4.53516c",
+                "3f1eed9f.755012",
+                "15ce37c4.46a128"
+            ]
+        ]
+    },
+    {
+        "id": "f71c1f62.03035",
+        "type": "mqtt in",
+        "z": "f70b46dd.a85ff8",
+        "name": "Lamp mode req feedback",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 210,
+        "y": 160,
+        "wires": [
+            [
+                "f824b32c.ae2b28"
+            ]
+        ]
+    },
+    {
+        "id": "1c959361.48d10d",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "msg.payload = 1\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 850,
+        "y": 160,
+        "wires": [
+            [
+                "a45d3c4.53516c"
+            ]
+        ]
+    },
+    {
+        "id": "f824b32c.ae2b28",
+        "type": "json",
+        "z": "f70b46dd.a85ff8",
+        "name": "Json converter",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 440,
+        "y": 160,
+        "wires": [
+            [
+                "116b7e8.114fa02"
+            ]
+        ]
+    },
+    {
+        "id": "116b7e8.114fa02",
+        "type": "switch",
+        "z": "f70b46dd.a85ff8",
+        "name": "No music mode",
+        "property": "payload.mode",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lt",
+                "v": "100",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 640,
+        "y": 160,
+        "wires": [
+            [
+                "1c959361.48d10d"
+            ]
+        ]
+    },
+    {
+        "id": "c20c21ed.295d",
+        "type": "delay",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 280,
+        "y": 780,
+        "wires": [
+            [
+                "d17f7b83.8874c"
+            ]
+        ]
+    },
+    {
+        "id": "d17f7b83.8874c",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set default values",
+        "func": "flow.set(\"effect_direction\",0);\nflow.set(\"min_freq\",0);\nflow.set(\"max_freq\",22000);\nflow.set(\"effect_delay\",30);\nflow.set(\"base_color_r\",255);\nflow.set(\"base_color_g\",0);\nflow.set(\"base_color_b\",0);\nflow.set(\"color_increment\",2);\nflow.set(\"effect_type\",1);\nflow.set(\"num_freq_windows\",1);\nflow.set(\"freq_wind_1\",1);\nflow.set(\"freq_wind_2\",1);\nflow.set(\"freq_wind_3\",1);\nflow.set(\"freq_wind_4\",1);\nflow.set(\"freq_wind_5\",1);\nflow.set(\"freq_wind_6\",1);\n\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570,
+        "y": 780,
+        "wires": [
+            [
+                "69ea4ba3.3cdab4"
+            ]
+        ]
+    },
+    {
+        "id": "7a5bf55e.eed21c",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "\nflow.set(\"freq_wind_1\", msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 970,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f1dac37f.1df6d8",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "\nflow.set(\"freq_wind_2\", msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 950,
+        "y": 1320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f3042ee3.49e458",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "\nflow.set(\"freq_wind_3\", msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1470,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "592d8125.37f89",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "\nflow.set(\"freq_wind_5\", msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1950,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8520140.eb3fa8",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "\nflow.set(\"freq_wind_6\", msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1930,
+        "y": 1320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fd343f40.f2afe",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set payload",
+        "func": "\nflow.set(\"freq_wind_4\", msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1450,
+        "y": 1320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "30439e56.eba802",
+        "type": "ui_numeric",
+        "z": "f70b46dd.a85ff8",
+        "name": "Num freq windows",
+        "label": "Num frequency windows",
+        "tooltip": "",
+        "group": "443be225.5df6ac",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "6",
+        "step": 1,
+        "x": 890,
+        "y": 860,
+        "wires": [
+            [
+                "e7d626d9.1cd678"
+            ]
+        ]
+    },
+    {
+        "id": "e7d626d9.1cd678",
+        "type": "function",
+        "z": "f70b46dd.a85ff8",
+        "name": "Set num lamps music",
+        "func": "\nflow.set(\"num_freq_windows\", msg.payload)\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1140,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "30971d6b.9dec4a",
+        "type": "debug",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1370,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "15ce37c4.46a128",
+        "type": "debug",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1510,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "396357e8.a541b8",
+        "type": "mqtt in",
+        "z": "f70b46dd.a85ff8",
+        "name": "Start music mode",
+        "topic": "lamp_network_music/alive_rx_mask",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 180,
+        "y": 1160,
+        "wires": [
+            [
+                "9052b4cf.3d3138",
+                "f987dad2.ec21b8",
+                "d74bd7a2.f5b1b8",
+                "e7ee0fde.b6c01",
+                "fdf6f447.dacc58",
+                "777c6b2.ba65d94",
+                "8236047c.0beb78"
+            ]
+        ]
+    },
+    {
+        "id": "9052b4cf.3d3138",
+        "type": "debug",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 330,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "15ebffee.d4faf8",
+        "type": "debug",
+        "z": "f70b46dd.a85ff8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 590,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "443be225.5df6ac",
+        "type": "ui_group",
+        "z": "",
+        "name": "General",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e67c6dfd.2c6b98",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "mosquitto",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "88aa0fb0.e86da",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 1",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "72cb93f7.276bbc",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 2",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "d3f31796.d89918",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 3",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "937a62c9.6963a",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 4",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "8d64539a.17168",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 5",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c5bcf318.01edc",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 6",
+        "tab": "1e560cfc.477ee3",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "1e560cfc.477ee3",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Music effects",
+        "icon": "fa-music",
+        "order": 4
+    }
+]

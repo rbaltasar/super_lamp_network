@@ -1,0 +1,6 @@
+[submodule "sound_reactive_lamp_master"]
+	path = sound_reactive_lamp_master
+	url = https://github.com/rbaltasar/sound_reactive_lamp_master.git
+[submodule "sound_reactive_lamp_slave"]
+	path = sound_reactive_lamp_slave
+	url = https://github.com/rbaltasar/sound_reactive_lamp_slave.git

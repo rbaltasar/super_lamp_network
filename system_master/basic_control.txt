@@ -1,0 +1,3729 @@
+[
+    {
+        "id": "f2d0d6f7.e3639",
+        "type": "tab",
+        "label": "Super Lamp Network",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "aaf968d3.2da9",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Lamp color",
+        "group": "7e057122.d766d8",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": true,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 770,
+        "y": 80,
+        "wires": [
+            [
+                "888575ba.8fda48"
+            ]
+        ]
+    },
+    {
+        "id": "888575ba.8fda48",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = global.get(\"lamp_network_mask\") || 0;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 990,
+        "y": 80,
+        "wires": [
+            [
+                "822bb32b.d1bb48"
+            ]
+        ]
+    },
+    {
+        "id": "822bb32b.d1bb48",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1250,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "230de85.41d2418",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "7e057122.d766d8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 760,
+        "y": 160,
+        "wires": [
+            [
+                "c1674ba3.7e6d9"
+            ]
+        ]
+    },
+    {
+        "id": "c1674ba3.7e6d9",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = global.get(\"lamp_network_mask\") || 0;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 160,
+        "wires": [
+            [
+                "8ffaaf30.f0dc"
+            ]
+        ]
+    },
+    {
+        "id": "8ffaaf30.f0dc",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1270,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "84450b8d.719d38",
+        "type": "ui_dropdown",
+        "z": "f2d0d6f7.e3639",
+        "name": "Mode",
+        "label": "",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "7e057122.d766d8",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "options": [
+            {
+                "label": "OFF",
+                "value": "0",
+                "type": "str"
+            },
+            {
+                "label": "ON",
+                "value": "1",
+                "type": "str"
+            },
+            {
+                "label": "AMBIENT LIGHT",
+                "value": "4",
+                "type": "str"
+            },
+            {
+                "label": "RGB LOOP",
+                "value": "10",
+                "type": "str"
+            },
+            {
+                "label": "FADE IN OUT",
+                "value": "11",
+                "type": "str"
+            },
+            {
+                "label": "STROBE",
+                "value": "12",
+                "type": "str"
+            },
+            {
+                "label": "FIRE",
+                "value": "13",
+                "type": "str"
+            },
+            {
+                "label": "HALLOWEEN EYES",
+                "value": "14",
+                "type": "str"
+            },
+            {
+                "label": "CYCLON BOUNCE",
+                "value": "15",
+                "type": "str"
+            },
+            {
+                "label": "TWINKLE",
+                "value": "16",
+                "type": "str"
+            },
+            {
+                "label": "TWINKLE RANDOM",
+                "value": "17",
+                "type": "str"
+            },
+            {
+                "label": "SPARKLE",
+                "value": "18",
+                "type": "str"
+            },
+            {
+                "label": "SNOW SPARKLE",
+                "value": "19",
+                "type": "str"
+            },
+            {
+                "label": "RUNNING LIGHTS",
+                "value": "20",
+                "type": "str"
+            },
+            {
+                "label": "COLOR WIPE",
+                "value": "21",
+                "type": "str"
+            },
+            {
+                "label": "RAINBOW CYCLE",
+                "value": "22",
+                "type": "str"
+            },
+            {
+                "label": "THEATER CHASE",
+                "value": "23",
+                "type": "str"
+            },
+            {
+                "label": "THEATER CHASE RAINBOW",
+                "value": "24",
+                "type": "str"
+            },
+            {
+                "label": "BOUNCING BALLS",
+                "value": "25",
+                "type": "str"
+            },
+            {
+                "label": "METEOR RAIN",
+                "value": "26",
+                "type": "str"
+            },
+            {
+                "label": "FADE TO BLACK",
+                "value": "27",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 750,
+        "y": 400,
+        "wires": [
+            [
+                "2c1e73af.45fa14"
+            ]
+        ]
+    },
+    {
+        "id": "2c1e73af.45fa14",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mask = global.get(\"lamp_network_mask\") || 0;\n\nglobal.set(\"lamp_network_state\",msg.payload);\n\nvar mode = msg.payload;\n\nmsg = {payload:\n      {\n        mode:mode,\n        id_mask:mask\n      }}\n     \n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 400,
+        "wires": [
+            [
+                "80f06def.b86a28"
+            ]
+        ]
+    },
+    {
+        "id": "80f06def.b86a28",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1260,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1b13bee3.4c86f1",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Speed",
+        "tooltip": "",
+        "group": "7e057122.d766d8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 750,
+        "y": 240,
+        "wires": [
+            [
+                "6bee0b3a.1fdf94"
+            ]
+        ]
+    },
+    {
+        "id": "6bee0b3a.1fdf94",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = global.get(\"lamp_network_mask\") || 0;\n\nmsg = {payload:\n      {\n        speed:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 240,
+        "wires": [
+            [
+                "6284f7b.1369088"
+            ]
+        ]
+    },
+    {
+        "id": "6284f7b.1369088",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/effect_speed",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1270,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "fa2fc4f4.13ec78",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Delay",
+        "tooltip": "",
+        "group": "7e057122.d766d8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": "100",
+        "step": 1,
+        "x": 750,
+        "y": 320,
+        "wires": [
+            [
+                "332e7e36.99b29a"
+            ]
+        ]
+    },
+    {
+        "id": "332e7e36.99b29a",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = global.get(\"lamp_network_mask\") || 0;\n\nmsg = {payload:\n      {\n        delay:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 320,
+        "wires": [
+            [
+                "c65cddc0.7ae86"
+            ]
+        ]
+    },
+    {
+        "id": "c65cddc0.7ae86",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/effect_delay",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1270,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "80a7786d.393a6",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Init communication request received",
+        "topic": "lamp_network/initcomm_tx",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 300,
+        "y": 1520,
+        "wires": [
+            [
+                "9a059bca.7ca418"
+            ]
+        ]
+    },
+    {
+        "id": "9a059bca.7ca418",
+        "type": "delay",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "100",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 600,
+        "y": 1520,
+        "wires": [
+            [
+                "bd52ba4f.1e52e8"
+            ]
+        ]
+    },
+    {
+        "id": "ffb08a85.05fa08",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode response",
+        "topic": "lamp_network/initcommrx",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1440,
+        "y": 1480,
+        "wires": []
+    },
+    {
+        "id": "5b496a6b.61dbfc",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var ID = 0;\nvar URL_name = \"http://default.local\";\nvar IP = msg.payload.ip;\n\nvar num_resets = flow.get(\"num_resets\") || 0;\nvar num_resets_current = 0;\n\nvar datetime = new Date();\nvar lamp_mode = global.get(\"lamp_network_state\") || 0;\n\nvar msg;\n\nif(msg.payload.mac == \"3C:71:BF:6A:CA:68\")\n{\n   ID = 0;\n   URL_name = \"http://lamp1.local\"\n   num_resets[0]++;\n   num_resets_current = num_resets[0];\n}\n\nelse if(msg.payload.mac == \"CC:50:E3:A2:44:E4\")\n{\n    ID = 1;\n    URL_name = \"http://lamp2.local\"\n    num_resets[1]++;\n    num_resets_current = num_resets[1];\n}\n\nelse if(msg.payload.mac == \"CC:50:E3:9A:10:5C\")\n{\n    ID = 2;\n    URL_name = \"http://lamp3.local\"\n    num_resets[2]++;\n    num_resets_current = num_resets[2];\n}\n\nelse if(msg.payload.mac == \"3C:71:BF:42:06:58\")\n{\n    ID = 3;\n    URL_name = \"http://lamp4.local\"\n    num_resets[3]++;\n    num_resets_current = num_resets[3];\n}\n\nelse if(msg.payload.mac == \"24:6F:28:10:76:C8\")\n{\n    ID = 4;\n    URL_name = \"http://lamp5.local\"\n    num_resets[4]++;\n    num_resets_current = num_resets[4];\n}\nelse if(msg.payload.mac == \"A4:CF:12:25:EE:38\")\n{\n    ID = 5;\n    URL_name = \"http://lamp6.local\"\n    num_resets[5]++;\n    num_resets_current = num_resets[5];\n}\n\nflow.set(\"num_resets\",num_resets);\n\n\nmsg = {payload:\n      {\n        mac:msg.payload.mac,\n        id:ID,\n        mode:lamp_mode,\n      },\n      url_name: URL_name,\n      IP_addr:IP,\n      num_resets_cpu:num_resets_current,\n      reset_reason_0:msg.payload.rst_0,\n      reset_reason_1:msg.payload.rst_1\n    }\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1160,
+        "y": 1520,
+        "wires": [
+            [
+                "ffb08a85.05fa08",
+                "3db858f8.377c78",
+                "1396ffc9.b883c"
+            ]
+        ]
+    },
+    {
+        "id": "f501bf9a.808ea8",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1010,
+        "y": 1600,
+        "wires": []
+    },
+    {
+        "id": "bd52ba4f.1e52e8",
+        "type": "json",
+        "z": "f2d0d6f7.e3639",
+        "name": "Json converter",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 820,
+        "y": 1520,
+        "wires": [
+            [
+                "5b496a6b.61dbfc",
+                "f501bf9a.808ea8"
+            ]
+        ]
+    },
+    {
+        "id": "663a477a.168a3",
+        "type": "ui_button",
+        "z": "f2d0d6f7.e3639",
+        "name": "Online",
+        "group": "ba930eb2.97191",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 670,
+        "y": 1960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "73420bac.e96374",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var lamp_online = flow.get(\"lamp_online\");\n\nvar msg;\nvar datetime = new Date()\nvar time_threshold = flow.get(\"alive_time\") * 2;\n\nif((datetime - lamp_online[0]) < time_threshold)\n{\n    msg = {topic: \"ONLINE\",\n        background: \"GREEN\",\n        payload: 1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload: 0\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 1960,
+        "wires": [
+            [
+                "663a477a.168a3",
+                "d8c9979.3ae6468"
+            ]
+        ]
+    },
+    {
+        "id": "648ba6e2.72e4b8",
+        "type": "inject",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 290,
+        "y": 2060,
+        "wires": [
+            [
+                "73420bac.e96374",
+                "5e6bf0d8.8d7828",
+                "63a79d52.005c84",
+                "2ea4f376.83c50c",
+                "edbf728d.641d88",
+                "7a4e3576.e18c8c",
+                "b1cd8a53.4e134"
+            ]
+        ]
+    },
+    {
+        "id": "4fa07c86.57a67c",
+        "type": "ui_button",
+        "z": "f2d0d6f7.e3639",
+        "name": "Online",
+        "group": "c221d889.38444",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 670,
+        "y": 2020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5e6bf0d8.8d7828",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var lamp_online = flow.get(\"lamp_online\");\n\nvar msg;\nvar datetime = new Date()\nvar time_threshold = flow.get(\"alive_time\") * 2;\n\nif((datetime - lamp_online[1]) < time_threshold)\n{\n    msg = {topic: \"ONLINE\",\n        background: \"GREEN\",\n        payload:1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload:0\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 2020,
+        "wires": [
+            [
+                "4fa07c86.57a67c",
+                "70dde53e.72b2e4"
+            ]
+        ]
+    },
+    {
+        "id": "503ec90e.89617",
+        "type": "ui_button",
+        "z": "f2d0d6f7.e3639",
+        "name": "Online",
+        "group": "8a259194.fed238",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 670,
+        "y": 2100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "63a79d52.005c84",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var lamp_online = flow.get(\"lamp_online\");\n\nvar msg;\nvar datetime = new Date()\nvar time_threshold = flow.get(\"alive_time\") * 2;\n\nif((datetime - lamp_online[2]) < time_threshold)\n{\n    msg = {topic: \"ONLINE\",\n        background: \"GREEN\",\n        payload:1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload:0\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 2100,
+        "wires": [
+            [
+                "503ec90e.89617",
+                "2e7b1c0a.ab0554"
+            ]
+        ]
+    },
+    {
+        "id": "c9df1536.1604e8",
+        "type": "ui_button",
+        "z": "f2d0d6f7.e3639",
+        "name": "Online",
+        "group": "af9ce26a.3ce9b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 670,
+        "y": 2160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2ea4f376.83c50c",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var lamp_online = flow.get(\"lamp_online\");\n\nvar msg;\nvar datetime = new Date()\nvar time_threshold = flow.get(\"alive_time\") * 2;\n\nif((datetime - lamp_online[3]) < time_threshold)\n{\n    msg = {topic: \"ONLINE\",\n        background: \"GREEN\",\n        payload:1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload:0\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 2160,
+        "wires": [
+            [
+                "c9df1536.1604e8",
+                "2c4c1a4b.2c59c6"
+            ]
+        ]
+    },
+    {
+        "id": "f90868c5.0d24b8",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "ON/OFF livingroom 1",
+        "label": "ON/OFF",
+        "tooltip": "",
+        "group": "8a259194.fed238",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 700,
+        "y": 3080,
+        "wires": [
+            [
+                "7f6d32ce.044acc"
+            ]
+        ]
+    },
+    {
+        "id": "b9d282ae.52c8d",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Group control livingroom 1",
+        "label": "Group control",
+        "tooltip": "",
+        "group": "8a259194.fed238",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 720,
+        "y": 3140,
+        "wires": [
+            [
+                "a5c308b6.16004"
+            ]
+        ]
+    },
+    {
+        "id": "3f16d729.595608",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 1 IP",
+        "label": "IP address lamp 1",
+        "format": "{{msg.IP_addr}}",
+        "layout": "row-spread",
+        "x": 1600,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "3db858f8.377c78",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "property": "payload.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "4",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "5",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 1400,
+        "y": 1640,
+        "wires": [
+            [
+                "3f16d729.595608",
+                "65e723da.87a68c",
+                "5a338ab4.dc3fcc"
+            ],
+            [
+                "ac6de895.ba2618",
+                "a73f319c.e9618",
+                "45b121cb.6af418"
+            ],
+            [
+                "86d5b81f.e48f68",
+                "7f3294b5.81022c",
+                "e5e8c7fb.c2f9d"
+            ],
+            [
+                "e2dbae2c.68d558",
+                "883c12ff.24d0f8",
+                "b08e4bac.04f2a"
+            ],
+            [
+                "b7b45e71.b2b22",
+                "54686df.14abf94",
+                "d9a32ed6.c9bad"
+            ],
+            [
+                "b0d1e6d8.b76f38",
+                "f3dde935.6a4d68",
+                "9c36b3be.d9052"
+            ]
+        ]
+    },
+    {
+        "id": "65e723da.87a68c",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 1 MAC",
+        "label": "MAC address lamp 1",
+        "format": "{{msg.payload.mac}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 1600,
+        "wires": []
+    },
+    {
+        "id": "5a338ab4.dc3fcc",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 1 OTA URL",
+        "label": "OTA URL lamp 1",
+        "format": "{{msg.url_name}}",
+        "layout": "row-spread",
+        "x": 1630,
+        "y": 1640,
+        "wires": []
+    },
+    {
+        "id": "ac6de895.ba2618",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 2 IP",
+        "label": "IP address lamp 2",
+        "format": "{{msg.IP_addr}}",
+        "layout": "row-spread",
+        "x": 1600,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "a73f319c.e9618",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 2 MAC",
+        "label": "MAC address lamp 2",
+        "format": "{{msg.payload.mac}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 1740,
+        "wires": []
+    },
+    {
+        "id": "45b121cb.6af418",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 2 OTA URL",
+        "label": "OTA URL lamp 2",
+        "format": "{{msg.url_name}}",
+        "layout": "row-spread",
+        "x": 1630,
+        "y": 1780,
+        "wires": []
+    },
+    {
+        "id": "86d5b81f.e48f68",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 3 IP",
+        "label": "IP address lamp 3",
+        "format": "{{msg.IP_addr}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 1840,
+        "wires": []
+    },
+    {
+        "id": "7f3294b5.81022c",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 3 MAC",
+        "label": "MAC address lamp 3",
+        "format": "{{msg.payload.mac}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 1880,
+        "wires": []
+    },
+    {
+        "id": "e5e8c7fb.c2f9d",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 3 OTA URL",
+        "label": "OTA URL lamp 3",
+        "format": "{{msg.url_name}}",
+        "layout": "row-spread",
+        "x": 1620,
+        "y": 1920,
+        "wires": []
+    },
+    {
+        "id": "e2dbae2c.68d558",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 4 IP",
+        "label": "IP address lamp 4",
+        "format": "{{msg.IP_addr}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 1980,
+        "wires": []
+    },
+    {
+        "id": "883c12ff.24d0f8",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 4 MAC",
+        "label": "MAC address lamp 4",
+        "format": "{{msg.payload.mac}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 2020,
+        "wires": []
+    },
+    {
+        "id": "b08e4bac.04f2a",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 12,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 4 OTA URL",
+        "label": "OTA URL lamp 4",
+        "format": "{{msg.url_name}}",
+        "layout": "row-spread",
+        "x": 1630,
+        "y": 2060,
+        "wires": []
+    },
+    {
+        "id": "39e90cf4.389444",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar datetime = new Date();\nvar lamp_online = flow.get(\"lamp_online\");\n\nif(msg.payload == \"0\")\n{\n   lamp_online[0] = datetime\n}\nif(msg.payload == \"1\")\n{\n   lamp_online[1] = datetime\n}\nif(msg.payload == \"2\")\n{\n   lamp_online[2] = datetime\n}\nif(msg.payload == \"3\")\n{\n   lamp_online[3] = datetime\n}\nif(msg.payload == \"4\")\n{\n   lamp_online[4] = datetime\n}\nif(msg.payload == \"5\")\n{\n   lamp_online[5] = datetime\n}\n\nflow.set(\"lamp_online\",lamp_online)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 580,
+        "y": 1740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fea97b9a.aa06c8",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Alive msg received",
+        "topic": "lamp_network/alive_tx",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 250,
+        "y": 1740,
+        "wires": [
+            [
+                "39e90cf4.389444",
+                "dd796c02.5e7fe"
+            ]
+        ]
+    },
+    {
+        "id": "edbf728d.641d88",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Alive msg send",
+        "topic": "lamp_network/alive_rx",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 500,
+        "y": 1880,
+        "wires": []
+    },
+    {
+        "id": "8cf51245.a3fc98",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Init communication request received",
+        "topic": "lamp_network/initcommrx",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 960,
+        "y": 1740,
+        "wires": [
+            [
+                "7343b81a.4a852"
+            ]
+        ]
+    },
+    {
+        "id": "7343b81a.4a852",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1250,
+        "y": 1740,
+        "wires": []
+    },
+    {
+        "id": "1396ffc9.b883c",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1390,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "7f6d32ce.044acc",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mode;\nvar mask = 1 << 2;\n\nif(msg.payload)\n{\n    mode = 1\n}\nelse\n{\n    mode = 0\n}\n\nmsg = {payload:\n      {\n        mode:msg.payload,\n        id_mask:mask\n      }}\n     \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3080,
+        "wires": [
+            [
+                "4b6ff7d4.c1adc8"
+            ]
+        ]
+    },
+    {
+        "id": "a5c308b6.16004",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar target_mask = global.get(\"lamp_network_mask\") || 0;\n\nif(msg.payload)\n{\n    target_mask |= (1 << 2)\n}\nelse\n{\n    target_mask ^=  (1 << 2)\n}\n\nglobal.set(\"lamp_network_mask\",target_mask);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4d74d781.0c2ed",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Lamp color",
+        "group": "8a259194.fed238",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": false,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 670,
+        "y": 3200,
+        "wires": [
+            [
+                "a2fce7a3.78029"
+            ]
+        ]
+    },
+    {
+        "id": "a2fce7a3.78029",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 2;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 890,
+        "y": 3200,
+        "wires": [
+            [
+                "12e8eace.73291d"
+            ]
+        ]
+    },
+    {
+        "id": "12e8eace.73291d",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1150,
+        "y": 3200,
+        "wires": []
+    },
+    {
+        "id": "1ed20b58.3ad725",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "8a259194.fed238",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 660,
+        "y": 3280,
+        "wires": [
+            [
+                "657e8acd.b0b4a4"
+            ]
+        ]
+    },
+    {
+        "id": "657e8acd.b0b4a4",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 2;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 3280,
+        "wires": [
+            [
+                "906c9a02.097a58"
+            ]
+        ]
+    },
+    {
+        "id": "906c9a02.097a58",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1170,
+        "y": 3280,
+        "wires": []
+    },
+    {
+        "id": "4b6ff7d4.c1adc8",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1260,
+        "y": 3080,
+        "wires": []
+    },
+    {
+        "id": "1d6d51a2.d68c06",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "ON/OFF livingroom 2",
+        "label": "ON/OFF",
+        "tooltip": "",
+        "group": "af9ce26a.3ce9b",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 700,
+        "y": 3380,
+        "wires": [
+            [
+                "a7e591f2.9bca08"
+            ]
+        ]
+    },
+    {
+        "id": "b4fb1c58.07307",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Group control livingroom 2",
+        "label": "Group control",
+        "tooltip": "",
+        "group": "af9ce26a.3ce9b",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 720,
+        "y": 3440,
+        "wires": [
+            [
+                "29e8f8d4.df3fd"
+            ]
+        ]
+    },
+    {
+        "id": "a7e591f2.9bca08",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mode;\nvar mask = 1 << 3;\n\nif(msg.payload)\n{\n    mode = 1\n}\nelse\n{\n    mode = 0\n}\n\nmsg = {payload:\n      {\n        mode:msg.payload,\n        id_mask:mask\n      }}\n     \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3380,
+        "wires": [
+            [
+                "f70cae03.87cb38"
+            ]
+        ]
+    },
+    {
+        "id": "29e8f8d4.df3fd",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar target_mask = global.get(\"lamp_network_mask\") || 0;\n\n\nif(msg.payload)\n{\n    target_mask |= (1 << 3)\n}\nelse\n{\n    target_mask ^=  (1 << 3)\n}\n\n\nglobal.set(\"lamp_network_mask\",target_mask);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "78cd599e.120a1",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Lamp color",
+        "group": "af9ce26a.3ce9b",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": false,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 670,
+        "y": 3500,
+        "wires": [
+            [
+                "d894a5a2.afd18"
+            ]
+        ]
+    },
+    {
+        "id": "d894a5a2.afd18",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 3;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 890,
+        "y": 3500,
+        "wires": [
+            [
+                "12441032.23b54"
+            ]
+        ]
+    },
+    {
+        "id": "12441032.23b54",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1150,
+        "y": 3500,
+        "wires": []
+    },
+    {
+        "id": "83b22d13.3fa66",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "af9ce26a.3ce9b",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 660,
+        "y": 3580,
+        "wires": [
+            [
+                "4b32ce36.d402c"
+            ]
+        ]
+    },
+    {
+        "id": "4b32ce36.d402c",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 3;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 3580,
+        "wires": [
+            [
+                "a0b9a058.b188b"
+            ]
+        ]
+    },
+    {
+        "id": "a0b9a058.b188b",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1170,
+        "y": 3580,
+        "wires": []
+    },
+    {
+        "id": "f70cae03.87cb38",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1260,
+        "y": 3380,
+        "wires": []
+    },
+    {
+        "id": "76efbad6.c6b5fc",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Mode request sent",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1530,
+        "y": 400,
+        "wires": [
+            [
+                "c31151e1.833818"
+            ]
+        ]
+    },
+    {
+        "id": "c31151e1.833818",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 1870,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "43a599a8.2eaed8",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Init communication request received",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1560,
+        "y": 80,
+        "wires": [
+            [
+                "15a7c60a.a9b662"
+            ]
+        ]
+    },
+    {
+        "id": "15a7c60a.a9b662",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 1830,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "dd796c02.5e7fe",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 570,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "275ebf9b.2225d",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "ON/OFF lamp 1",
+        "label": "ON/OFF",
+        "tooltip": "",
+        "group": "ba930eb2.97191",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 700,
+        "y": 2440,
+        "wires": [
+            [
+                "2e20d565.c397b2"
+            ]
+        ]
+    },
+    {
+        "id": "a151ff39.f03db",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Group control lamp 1",
+        "label": "Group control",
+        "tooltip": "",
+        "group": "ba930eb2.97191",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 720,
+        "y": 2500,
+        "wires": [
+            [
+                "287df2ef.232b26"
+            ]
+        ]
+    },
+    {
+        "id": "2e20d565.c397b2",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mode;\nvar mask = 1;\n\nif(msg.payload)\n{\n    mode = 1\n}\nelse\n{\n    mode = 0\n}\n\nmsg = {payload:\n      {\n        mode:msg.payload,\n        id_mask:mask\n      }}\n     \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 2440,
+        "wires": [
+            [
+                "1d9c18c7.c1ae17"
+            ]
+        ]
+    },
+    {
+        "id": "287df2ef.232b26",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar target_mask = global.get(\"lamp_network_mask\") || 0;\n\n\n\nif(msg.payload)\n{\n    target_mask |= 1\n}\nelse\n{\n    target_mask ^=  1\n}\n\nglobal.set(\"lamp_network_mask\",target_mask);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 2500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cb600c72.a95ca8",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp 1 color",
+        "label": "Lamp color",
+        "group": "ba930eb2.97191",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": false,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 690,
+        "y": 2560,
+        "wires": [
+            [
+                "2b71f8ba.3cf6e"
+            ]
+        ]
+    },
+    {
+        "id": "2b71f8ba.3cf6e",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 2560,
+        "wires": [
+            [
+                "19737ca5.c0a0e3"
+            ]
+        ]
+    },
+    {
+        "id": "19737ca5.c0a0e3",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1170,
+        "y": 2560,
+        "wires": []
+    },
+    {
+        "id": "c8c66ffa.3633a8",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "ba930eb2.97191",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 680,
+        "y": 2640,
+        "wires": [
+            [
+                "fda5eb59.bae4b8"
+            ]
+        ]
+    },
+    {
+        "id": "fda5eb59.bae4b8",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 920,
+        "y": 2640,
+        "wires": [
+            [
+                "381ca451.1498e4"
+            ]
+        ]
+    },
+    {
+        "id": "381ca451.1498e4",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1190,
+        "y": 2640,
+        "wires": []
+    },
+    {
+        "id": "1d9c18c7.c1ae17",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1280,
+        "y": 2440,
+        "wires": []
+    },
+    {
+        "id": "7b68d95e.a26208",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "ON/OFF lamp 2",
+        "label": "ON/OFF",
+        "tooltip": "",
+        "group": "c221d889.38444",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 700,
+        "y": 2740,
+        "wires": [
+            [
+                "ca7aa41c.7e7cb8"
+            ]
+        ]
+    },
+    {
+        "id": "f40bc482.5c3f",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Group control lamp 2",
+        "label": "Group control",
+        "tooltip": "",
+        "group": "c221d889.38444",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 720,
+        "y": 2800,
+        "wires": [
+            [
+                "15ae049a.b2e0d3"
+            ]
+        ]
+    },
+    {
+        "id": "ca7aa41c.7e7cb8",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mode;\nvar mask = 1 << 1;\n\nmsg = {payload:\n      {\n        mode:msg.payload,\n        id_mask:mask\n      }}\n     \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 2740,
+        "wires": [
+            [
+                "cbf5e89b.d18e5"
+            ]
+        ]
+    },
+    {
+        "id": "15ae049a.b2e0d3",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar target_mask = global.get(\"lamp_network_mask\") || 0;\n\n\nif(msg.payload)\n{\n    target_mask |= (1 << 1)\n}\nelse\n{\n    target_mask ^=  (1 << 1)\n}\n\n\nglobal.set(\"lamp_network_mask\",target_mask);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1000,
+        "y": 2800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "58cb3a6b.72824c",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Lamp color",
+        "group": "c221d889.38444",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": false,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 690,
+        "y": 2860,
+        "wires": [
+            [
+                "97416bdc.02c828"
+            ]
+        ]
+    },
+    {
+        "id": "97416bdc.02c828",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 1;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 2860,
+        "wires": [
+            [
+                "3a2c14a5.344ae4"
+            ]
+        ]
+    },
+    {
+        "id": "3a2c14a5.344ae4",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1170,
+        "y": 2860,
+        "wires": []
+    },
+    {
+        "id": "8dbd850b.817e1",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "c221d889.38444",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 680,
+        "y": 2940,
+        "wires": [
+            [
+                "2411bdb1.254392"
+            ]
+        ]
+    },
+    {
+        "id": "2411bdb1.254392",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 1;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 920,
+        "y": 2940,
+        "wires": [
+            [
+                "181ce8bc.4e2fa7"
+            ]
+        ]
+    },
+    {
+        "id": "181ce8bc.4e2fa7",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1190,
+        "y": 2940,
+        "wires": []
+    },
+    {
+        "id": "cbf5e89b.d18e5",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1280,
+        "y": 2740,
+        "wires": []
+    },
+    {
+        "id": "d97b6915.8df6c8",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode req feedback",
+        "topic": "lamp_network/mode_request_feedback",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "5fffc992.6742e"
+            ]
+        ]
+    },
+    {
+        "id": "bc6ef6ed.459748",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nmsg.payload = msg.payload.mode;\n\nglobal.set(\"lamp_network_state\",msg.payload);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 400,
+        "wires": [
+            [
+                "84450b8d.719d38"
+            ]
+        ]
+    },
+    {
+        "id": "5fffc992.6742e",
+        "type": "json",
+        "z": "f2d0d6f7.e3639",
+        "name": "Json converter",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 400,
+        "y": 240,
+        "wires": [
+            [
+                "d75157df.e82ce8",
+                "bc6ef6ed.459748"
+            ]
+        ]
+    },
+    {
+        "id": "bd944ae7.0ea2f",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Light switch",
+        "label": "Light",
+        "tooltip": "",
+        "group": "66bb6238.405dac",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 310,
+        "y": 600,
+        "wires": [
+            [
+                "c6143af4.b5985"
+            ]
+        ]
+    },
+    {
+        "id": "d879b174.ff7578",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Event on change",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "",
+                "vt": "prev"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 550,
+        "y": 500,
+        "wires": [
+            [
+                "84450b8d.719d38",
+                "2c1e73af.45fa14"
+            ]
+        ]
+    },
+    {
+        "id": "b2442f11.bc2d38",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nif(msg.payload.mode == 1)\n{\n    msg.payload = true;\n}\nelse\n{\n    msg.payload = false;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 120,
+        "y": 500,
+        "wires": [
+            [
+                "bd944ae7.0ea2f"
+            ]
+        ]
+    },
+    {
+        "id": "c6143af4.b5985",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nif(msg.payload)\n{\n    msg.payload = 1;\n}\nelse\n{\n    msg.payload = 0;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 340,
+        "y": 500,
+        "wires": [
+            [
+                "d879b174.ff7578"
+            ]
+        ]
+    },
+    {
+        "id": "dc80717c.6c044",
+        "type": "ui_chart",
+        "z": "f2d0d6f7.e3639",
+        "name": "Connection status",
+        "group": "7f57cfa9.8614c",
+        "order": 2,
+        "width": "12",
+        "height": "7",
+        "label": "Connection status",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "2",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 1150,
+        "y": 2040,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "d8c9979.3ae6468",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\n\nmsg = {topic: \"LAMP_1\",\n       payload: msg.payload\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 1880,
+        "wires": [
+            [
+                "dc80717c.6c044"
+            ]
+        ]
+    },
+    {
+        "id": "2e7b1c0a.ab0554",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {topic: \"LAMP_3\",\n       payload: msg.payload\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 2040,
+        "wires": [
+            [
+                "dc80717c.6c044"
+            ]
+        ]
+    },
+    {
+        "id": "2c4c1a4b.2c59c6",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {topic: \"LAMP_4\",\n       payload: msg.payload\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 2120,
+        "wires": [
+            [
+                "dc80717c.6c044"
+            ]
+        ]
+    },
+    {
+        "id": "ab349f29.61c71",
+        "type": "inject",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 250,
+        "y": 1380,
+        "wires": [
+            [
+                "ecfcc492.3a1288"
+            ]
+        ]
+    },
+    {
+        "id": "ecfcc492.3a1288",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar lamp_online = [0,0,0,0,0,0];\nflow.set(\"lamp_online\",lamp_online);\n\nflow.set(\"alive_time\",30000);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 1380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "70dde53e.72b2e4",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {topic: \"LAMP_2\",\n       payload: msg.payload\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 1960,
+        "wires": [
+            [
+                "dc80717c.6c044"
+            ]
+        ]
+    },
+    {
+        "id": "5e8c3d30.a87c04",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Presence detection change",
+        "topic": "presence_detection/presence_changed",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 160,
+        "y": 740,
+        "wires": [
+            [
+                "7c5d3514.29927c"
+            ]
+        ]
+    },
+    {
+        "id": "7c5d3514.29927c",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Check presence",
+        "func": "\nvar presence_cris = global.get(\"presence_cris\");\nvar presence_raul = global.get(\"presence_raul\");\n\nif(presence_cris || presence_raul)\n{\n    msg.payload = 1;\n}\nelse\n{\n    msg.payload = 0;\n}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 420,
+        "y": 740,
+        "wires": [
+            [
+                "a0d09904.623008"
+            ]
+        ]
+    },
+    {
+        "id": "a0d09904.623008",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Event at change",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "",
+                "vt": "prev"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 630,
+        "y": 740,
+        "wires": [
+            [
+                "9866f88a.3e0ee8"
+            ]
+        ]
+    },
+    {
+        "id": "9866f88a.3e0ee8",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Nobody there",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 740,
+        "wires": [
+            [
+                "84450b8d.719d38",
+                "2c1e73af.45fa14"
+            ]
+        ]
+    },
+    {
+        "id": "d75157df.e82ce8",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Evaluate mask",
+        "property": "payload.id_mask",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "255",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 140,
+        "y": 400,
+        "wires": [
+            [
+                "b2442f11.bc2d38"
+            ]
+        ]
+    },
+    {
+        "id": "28d74f9.c9cb3b",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Light amount",
+        "topic": "livingroom_node/light",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 170,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7f5a38a8.e52058",
+        "type": "json",
+        "z": "f2d0d6f7.e3639",
+        "name": "Json converter",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 380,
+        "y": 940,
+        "wires": [
+            [
+                "2960bf06.6850a",
+                "31ace923.ccd246"
+            ]
+        ]
+    },
+    {
+        "id": "3ebd3dc8.0c1282",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = global.get(\"lamp_network_mask\") || 0;\n\nvar light = msg.payload.light;\n\nvar R_val = 255;\nvar G_val = 218;\nvar B_val = 107;\n\nvar light_threshold = 15;\n\nif(light > light_threshold)\n{\n    R_val = 0;\n    G_val = 0;\n    B_val = 0;\n}\nelse\n{\n    var multiplier = (15 - light) / 30;\n    \n    R_val *= multiplier;\n    G_val *= multiplier;\n    B_val *= multiplier;\n}\n\nmsg = {payload:\n      {\n        R:R_val,\n        G:G_val,\n        B:B_val,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 940,
+        "wires": [
+            [
+                "55529772.58e238",
+                "30c147b3.5f3e48"
+            ]
+        ]
+    },
+    {
+        "id": "55529772.58e238",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1120,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "2960bf06.6850a",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "If Ambient Light mode",
+        "property": "lamp_network_state",
+        "propertyType": "global",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "4",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 620,
+        "y": 940,
+        "wires": [
+            [
+                "3ebd3dc8.0c1282"
+            ]
+        ]
+    },
+    {
+        "id": "30c147b3.5f3e48",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1160,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "31ace923.ccd246",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 570,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "b7b45e71.b2b22",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 5 IP",
+        "label": "IP address lamp 5",
+        "format": "{{msg.IP_addr}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 2140,
+        "wires": []
+    },
+    {
+        "id": "54686df.14abf94",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 14,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 5 MAC",
+        "label": "MAC address lamp 5",
+        "format": "{{msg.payload.mac}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 2180,
+        "wires": []
+    },
+    {
+        "id": "d9a32ed6.c9bad",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 15,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 5 OTA URL",
+        "label": "OTA URL lamp 5",
+        "format": "{{msg.url_name}}",
+        "layout": "row-spread",
+        "x": 1620,
+        "y": 2220,
+        "wires": []
+    },
+    {
+        "id": "b0d1e6d8.b76f38",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 16,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 6 IP",
+        "label": "IP address lamp 6",
+        "format": "{{msg.IP_addr}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 2280,
+        "wires": []
+    },
+    {
+        "id": "f3dde935.6a4d68",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 17,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 6 MAC",
+        "label": "MAC address lamp 6",
+        "format": "{{msg.payload.mac}}",
+        "layout": "row-spread",
+        "x": 1610,
+        "y": 2320,
+        "wires": []
+    },
+    {
+        "id": "9c36b3be.d9052",
+        "type": "ui_text",
+        "z": "f2d0d6f7.e3639",
+        "group": "7e023a9b.971cdc",
+        "order": 18,
+        "width": 0,
+        "height": 0,
+        "name": "Lamp 6 OTA URL",
+        "label": "OTA URL lamp 6",
+        "format": "{{msg.url_name}}",
+        "layout": "row-spread",
+        "x": 1620,
+        "y": 2360,
+        "wires": []
+    },
+    {
+        "id": "7a4e3576.e18c8c",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var lamp_online = flow.get(\"lamp_online\");\n\nvar msg;\nvar datetime = new Date()\nvar time_threshold = flow.get(\"alive_time\") * 2;\n\nif((datetime - lamp_online[4]) < time_threshold)\n{\n    msg = {topic: \"ONLINE\",\n        background: \"GREEN\",\n        payload:1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload:0\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 2240,
+        "wires": [
+            [
+                "f50b3ca.2020fc",
+                "dc7a3245.f3d62"
+            ]
+        ]
+    },
+    {
+        "id": "f50b3ca.2020fc",
+        "type": "ui_button",
+        "z": "f2d0d6f7.e3639",
+        "name": "Online",
+        "group": "7f40fdc8.ad1ec4",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 670,
+        "y": 2240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dc7a3245.f3d62",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {topic: \"LAMP_5\",\n       payload: msg.payload\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 2180,
+        "wires": [
+            [
+                "dc80717c.6c044"
+            ]
+        ]
+    },
+    {
+        "id": "b1cd8a53.4e134",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var lamp_online = flow.get(\"lamp_online\");\n\nvar msg;\nvar datetime = new Date()\nvar time_threshold = flow.get(\"alive_time\") * 2;\n\nif((datetime - lamp_online[5]) < time_threshold)\n{\n    msg = {topic: \"ONLINE\",\n        background: \"GREEN\",\n        payload:1\n    }\n}\nelse\n{\n    msg = {topic: \"OFFLINE\",\n        background: \"RED\",\n        payload:0\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 500,
+        "y": 2320,
+        "wires": [
+            [
+                "320c7018.91e308",
+                "ba8faec7.563618"
+            ]
+        ]
+    },
+    {
+        "id": "320c7018.91e308",
+        "type": "ui_button",
+        "z": "f2d0d6f7.e3639",
+        "name": "Online",
+        "group": "e1a5d8ea.69b698",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "{{msg.topic}}",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "{{msg.background}}",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "x": 670,
+        "y": 2320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ba8faec7.563618",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {topic: \"LAMP_6\",\n       payload: msg.payload\n    }\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 860,
+        "y": 2260,
+        "wires": [
+            [
+                "dc80717c.6c044"
+            ]
+        ]
+    },
+    {
+        "id": "2b32686.197eb18",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "ON/OFF livingroom 1",
+        "label": "ON/OFF",
+        "tooltip": "",
+        "group": "7f40fdc8.ad1ec4",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 700,
+        "y": 3680,
+        "wires": [
+            [
+                "fb2b327e.8ada88"
+            ]
+        ]
+    },
+    {
+        "id": "aa000aa5.cf4d28",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Group control livingroom 1",
+        "label": "Group control",
+        "tooltip": "",
+        "group": "7f40fdc8.ad1ec4",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 720,
+        "y": 3740,
+        "wires": [
+            [
+                "f2685ce8.657918"
+            ]
+        ]
+    },
+    {
+        "id": "fb2b327e.8ada88",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mode;\nvar mask = 1 << 4;\n\nif(msg.payload)\n{\n    mode = 1\n}\nelse\n{\n    mode = 0\n}\n\nmsg = {payload:\n      {\n        mode:msg.payload,\n        id_mask:mask\n      }}\n     \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3680,
+        "wires": [
+            [
+                "d74f373f.45344"
+            ]
+        ]
+    },
+    {
+        "id": "f2685ce8.657918",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar target_mask = global.get(\"lamp_network_mask\") || 0;\n\nif(msg.payload)\n{\n    target_mask |= (1 << 4)\n}\nelse\n{\n    target_mask ^=  (1 << 4)\n}\n\nglobal.set(\"lamp_network_mask\",target_mask);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b5cf2668.122438",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Lamp color",
+        "group": "7f40fdc8.ad1ec4",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": false,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 670,
+        "y": 3800,
+        "wires": [
+            [
+                "2e287993.eb70b6"
+            ]
+        ]
+    },
+    {
+        "id": "2e287993.eb70b6",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 4;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 890,
+        "y": 3800,
+        "wires": [
+            [
+                "a2b9d53d.92ed3"
+            ]
+        ]
+    },
+    {
+        "id": "a2b9d53d.92ed3",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1150,
+        "y": 3800,
+        "wires": []
+    },
+    {
+        "id": "40475583.708c14",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "7f40fdc8.ad1ec4",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 660,
+        "y": 3880,
+        "wires": [
+            [
+                "fd857e33.03195"
+            ]
+        ]
+    },
+    {
+        "id": "fd857e33.03195",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 4;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 3880,
+        "wires": [
+            [
+                "fd297a8a.9265"
+            ]
+        ]
+    },
+    {
+        "id": "fd297a8a.9265",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1170,
+        "y": 3880,
+        "wires": []
+    },
+    {
+        "id": "d74f373f.45344",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1260,
+        "y": 3680,
+        "wires": []
+    },
+    {
+        "id": "25bec1cb.251556",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "ON/OFF livingroom 2",
+        "label": "ON/OFF",
+        "tooltip": "",
+        "group": "e1a5d8ea.69b698",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 700,
+        "y": 3980,
+        "wires": [
+            [
+                "bd9d17d7.0f8808"
+            ]
+        ]
+    },
+    {
+        "id": "ecc8d803.0cf808",
+        "type": "ui_switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "Group control livingroom 2",
+        "label": "Group control",
+        "tooltip": "",
+        "group": "e1a5d8ea.69b698",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 720,
+        "y": 4040,
+        "wires": [
+            [
+                "49aa0cab.d7d834"
+            ]
+        ]
+    },
+    {
+        "id": "bd9d17d7.0f8808",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "var mode;\nvar mask = 1 << 5;\n\nif(msg.payload)\n{\n    mode = 1\n}\nelse\n{\n    mode = 0\n}\n\nmsg = {payload:\n      {\n        mode:msg.payload,\n        id_mask:mask\n      }}\n     \n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 3980,
+        "wires": [
+            [
+                "801b3680.2e066"
+            ]
+        ]
+    },
+    {
+        "id": "49aa0cab.d7d834",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar target_mask = global.get(\"lamp_network_mask\") || 0;\n\n\nif(msg.payload)\n{\n    target_mask |= (1 << 5)\n}\nelse\n{\n    target_mask ^=  (1 << 5)\n}\n\n\nglobal.set(\"lamp_network_mask\",target_mask);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 980,
+        "y": 4040,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9587a4b3.11d85",
+        "type": "ui_colour_picker",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Lamp color",
+        "group": "e1a5d8ea.69b698",
+        "format": "rgb",
+        "outformat": "object",
+        "showSwatch": true,
+        "showPicker": false,
+        "showValue": false,
+        "showHue": false,
+        "showAlpha": false,
+        "showLightness": true,
+        "dynOutput": "false",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "topic": "",
+        "x": 670,
+        "y": 4100,
+        "wires": [
+            [
+                "e771fe7c.5f828"
+            ]
+        ]
+    },
+    {
+        "id": "e771fe7c.5f828",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 5;\n\nmsg = {payload:\n      {\n        R:msg.payload.r,\n        G:msg.payload.g,\n        B:msg.payload.b,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 890,
+        "y": 4100,
+        "wires": [
+            [
+                "49ffff36.174a88"
+            ]
+        ]
+    },
+    {
+        "id": "49ffff36.174a88",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1150,
+        "y": 4100,
+        "wires": []
+    },
+    {
+        "id": "b64b7974.a1cd",
+        "type": "ui_slider",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "label": "Intensity",
+        "tooltip": "",
+        "group": "e1a5d8ea.69b698",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 660,
+        "y": 4180,
+        "wires": [
+            [
+                "86656bcb.6e4078"
+            ]
+        ]
+    },
+    {
+        "id": "86656bcb.6e4078",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nvar mask = 1 << 5;\n\nmsg = {payload:\n      {\n        intensity:msg.payload,\n        id_mask:mask\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 900,
+        "y": 4180,
+        "wires": [
+            [
+                "2b7fb75e.d3d69"
+            ]
+        ]
+    },
+    {
+        "id": "2b7fb75e.d3d69",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/light_intensity",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1170,
+        "y": 4180,
+        "wires": []
+    },
+    {
+        "id": "801b3680.2e066",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 1260,
+        "y": 3980,
+        "wires": []
+    },
+    {
+        "id": "cf53b965.1e4db",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Alive msg received",
+        "topic": "lamp_network/connected",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 250,
+        "y": 1620,
+        "wires": [
+            [
+                "bf7a6ebd.e5536"
+            ]
+        ]
+    },
+    {
+        "id": "bf7a6ebd.e5536",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 570,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "50cacb5.742f4b4",
+        "type": "mqtt in",
+        "z": "f2d0d6f7.e3639",
+        "name": "Alive msg received",
+        "topic": "lamp_network/loop",
+        "qos": "2",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 250,
+        "y": 1660,
+        "wires": [
+            [
+                "48c80146.99faf8"
+            ]
+        ]
+    },
+    {
+        "id": "48c80146.99faf8",
+        "type": "debug",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "x": 570,
+        "y": 1660,
+        "wires": []
+    },
+    {
+        "id": "71e2cd15.c578e4",
+        "type": "ui_dropdown",
+        "z": "f2d0d6f7.e3639",
+        "name": "Effect",
+        "label": "Effect",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "15a3976.815fd69",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "options": [
+            {
+                "label": "RELAX STATIC",
+                "value": 0,
+                "type": "num"
+            },
+            {
+                "label": "RELAX FIRE",
+                "value": 1,
+                "type": "num"
+            },
+            {
+                "label": "RELAX BALLS",
+                "value": 2,
+                "type": "num"
+            }
+        ],
+        "payload": "",
+        "topic": "",
+        "x": 2210,
+        "y": 80,
+        "wires": [
+            [
+                "ba2620a6.2a0938"
+            ]
+        ]
+    },
+    {
+        "id": "546c9772.87f5c",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {payload:\n      {\n        mode:1,\n        id_mask:15\n      }}\n     \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2640,
+        "y": 80,
+        "wires": [
+            [
+                "7d19caaf.317964",
+                "3e7821a2.200116"
+            ]
+        ]
+    },
+    {
+        "id": "ba2620a6.2a0938",
+        "type": "switch",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 2390,
+        "y": 80,
+        "wires": [
+            [
+                "546c9772.87f5c"
+            ],
+            [
+                "c820256e.20f4f8",
+                "546c9772.87f5c"
+            ],
+            [
+                "546c9772.87f5c",
+                "8eb3c847.216b78"
+            ]
+        ]
+    },
+    {
+        "id": "7d19caaf.317964",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 2860,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "9c1ece6a.87561",
+        "type": "delay",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 2650,
+        "y": 220,
+        "wires": [
+            [
+                "ba19b962.49446"
+            ]
+        ]
+    },
+    {
+        "id": "ba19b962.49446",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nmsg = {payload:\n      {\n        R:0,\n        G:29,\n        B:66,\n        id_mask:3\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2860,
+        "y": 220,
+        "wires": [
+            [
+                "c5fdca28.67cd5"
+            ]
+        ]
+    },
+    {
+        "id": "c5fdca28.67cd5",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp color request",
+        "topic": "lamp_network/light_color",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 3120,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "da338e36.bdefd8",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {payload:\n      {\n        mode:0,\n        id_mask:48\n      }}\n     \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2860,
+        "y": 140,
+        "wires": [
+            [
+                "3b2110fe.52beb8"
+            ]
+        ]
+    },
+    {
+        "id": "3b2110fe.52beb8",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 3080,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "3e7821a2.200116",
+        "type": "delay",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 2650,
+        "y": 140,
+        "wires": [
+            [
+                "da338e36.bdefd8",
+                "9c1ece6a.87561"
+            ]
+        ]
+    },
+    {
+        "id": "c820256e.20f4f8",
+        "type": "delay",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 2660,
+        "y": 320,
+        "wires": [
+            [
+                "f639accf.6a349"
+            ]
+        ]
+    },
+    {
+        "id": "f639accf.6a349",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {payload:\n      {\n        mode:13,\n        id_mask:48\n      }}\n     \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2860,
+        "y": 320,
+        "wires": [
+            [
+                "8e7c9af8.dadb48"
+            ]
+        ]
+    },
+    {
+        "id": "8e7c9af8.dadb48",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 3080,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "93f8fffd.8135b8",
+        "type": "delay",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 2650,
+        "y": 460,
+        "wires": [
+            [
+                "b784a247.c925d"
+            ]
+        ]
+    },
+    {
+        "id": "b784a247.c925d",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "msg = {payload:\n      {\n        mode:25,\n        id_mask:48\n      }}\n     \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2860,
+        "y": 460,
+        "wires": [
+            [
+                "20120aeb.51c29e"
+            ]
+        ]
+    },
+    {
+        "id": "20120aeb.51c29e",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp mode request",
+        "topic": "lamp_network/mode_request",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 3080,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "59ea40a.6c21f4",
+        "type": "function",
+        "z": "f2d0d6f7.e3639",
+        "name": "Parse message",
+        "func": "\nmsg = {payload:\n      {\n        delay:5,\n        id_mask:48\n      }}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2860,
+        "y": 400,
+        "wires": [
+            [
+                "636499fd.73b3b"
+            ]
+        ]
+    },
+    {
+        "id": "636499fd.73b3b",
+        "type": "mqtt out",
+        "z": "f2d0d6f7.e3639",
+        "name": "Lamp intensity request",
+        "topic": "lamp_network/effect_delay",
+        "qos": "2",
+        "retain": "",
+        "broker": "e67c6dfd.2c6b98",
+        "x": 3130,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "8eb3c847.216b78",
+        "type": "delay",
+        "z": "f2d0d6f7.e3639",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 2660,
+        "y": 400,
+        "wires": [
+            [
+                "59ea40a.6c21f4",
+                "93f8fffd.8135b8"
+            ]
+        ]
+    },
+    {
+        "id": "7e057122.d766d8",
+        "type": "ui_group",
+        "z": "",
+        "name": "General",
+        "tab": "4fe1af04.48d038",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e67c6dfd.2c6b98",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "mosquitto",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "ba930eb2.97191",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 1",
+        "tab": "4fe1af04.48d038",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c221d889.38444",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 2",
+        "tab": "4fe1af04.48d038",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "8a259194.fed238",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 3",
+        "tab": "4fe1af04.48d038",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "af9ce26a.3ce9b",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 4",
+        "tab": "4fe1af04.48d038",
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "7e023a9b.971cdc",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamps config",
+        "tab": "dd59a7f5.332858",
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "66bb6238.405dac",
+        "type": "ui_group",
+        "z": "",
+        "name": "Livingroom",
+        "tab": "9a2a32a2.fb4ce",
+        "disp": true,
+        "width": "4",
+        "collapse": false
+    },
+    {
+        "id": "7f57cfa9.8614c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp network connection",
+        "tab": "22dbe042.537a68",
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "7f40fdc8.ad1ec4",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 5",
+        "tab": "4fe1af04.48d038",
+        "order": 7,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "e1a5d8ea.69b698",
+        "type": "ui_group",
+        "z": "",
+        "name": "Lamp 6",
+        "tab": "4fe1af04.48d038",
+        "order": 8,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "15a3976.815fd69",
+        "type": "ui_group",
+        "z": "",
+        "name": "Pre-configured modes",
+        "tab": "4fe1af04.48d038",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "4fe1af04.48d038",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Livingroom lamps",
+        "icon": "fa-lightbulb-o",
+        "order": 3
+    },
+    {
+        "id": "dd59a7f5.332858",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Configuration",
+        "icon": "fa-cog",
+        "order": 8
+    },
+    {
+        "id": "9a2a32a2.fb4ce",
+        "type": "ui_tab",
+        "z": "",
+        "name": "House control",
+        "icon": "home",
+        "order": 1
+    },
+    {
+        "id": "22dbe042.537a68",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Graphs",
+        "icon": "fa-signal",
+        "order": 9
+    }
+]
