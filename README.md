@@ -94,7 +94,8 @@ For a more detailed explanation of how the effects work, see the slave section.
 * Node-Red for System Master and GUI (dashboard).
 
 ### Third party libraries
-<Signal processing>
+* Signal processing part of Music Master: https://github.com/scottlawsonbc/audio-reactive-led-strip
+* Static effects: https://www.tweaking4all.com/hardware/arduino/adruino-led-strip-effects/
 
 ## Communication description
 ### MQTT communication
@@ -136,7 +137,7 @@ Unfortunately, the advantages of this protocol comes at a price. UDP multicast w
 For color streaming messages (payload messages), I have seen that sending them 4 times with a very small delay between them gives a good compromise between performance and quality. Although sometimes all the 4 packets may not arrive at the destination, it happens so rarely that it is not often appreciated in the final effect and therefore, acceptable.
 For configuration or mode change messages, I really need all the slaves to receive them, as otherwise the system will collapse (some slaves listening to UDP, some others to MQTT...). To ensure this, whenever a configuration or mode change message has to be sent, there is a noticeable delay before, to reduce the network load, and then the same message is sent up to 8 times. This reduces the real-time effect of the system until the configuration procedure is complete.
 This mentioned procedure, to overcome the network losses, comes also at a price. The Raspberry Pi 4 generates between 30 and 40 payload messages per second, which implies 40*4 = 160 UDP messages per second. If your router internally does a multicast-unicast conversion, then you are sending 160*N UDP messages per second. In my case with 6 lamps rocking, there are almost 1000 UDP messages / s being sent in your network.
-With my personal setup (router type, router position, number of clients connected to the router...) I appreciate almost no performance issue with 6 lamps in Music Mode and one WiFi speaker playing music. To that setup I also added my TV straming 4K from Netflix via Ethernet cable, without any problem. BUT if you add more load to the wireless network (e.g: 4K Streaming via WiFi, Whatsapp call, additional WiFi speakers synchronized with each other...) then you will immediately appreciate that you are putting your router into some stress.
+With my personal setup (router type, router position, number of clients connected to the router...) I appreciate almost no performance issue with 4 lamps in Music Mode and one WiFi speaker playing music. To that setup I also added my TV straming 4K from Netflix via Ethernet cable, without any problem. BUT if you add more load to the wireless network (e.g: 4K Streaming via WiFi, Whatsapp call, additional WiFi speakers synchronized with each other...) then you will immediately appreciate that you are putting your router into some stress.
 If you play with Music Mode while your partner tries to talk with someone via Whatsapp web, assume the consequences :)
 
 Although the UDP communication is very stable, same alive procedure has been implemented as with MQTT, to ensure a reboot in case of error and to inform the user of what lamps are available in Music Mode.
@@ -164,12 +165,9 @@ The System Master and the Music Master can be deployed on the same physical mach
 Please note that, as described above, the Slaves stop the MQTT communication when they switch to music mode, and therefore in this mode they are fully controlled by the Music Master. Any action that is not forwarded from the Music Master (e.g: change brightness) will be ignored.
 Please also note that MQTT communication requires a MQTT broker. This is not part of the System Master and needs to be accessible in the local network. For simplicity, it is installed in the same machine where Node-Red runs.
 
-The actions that can be done through the User Interface are:
-<Actions>
-
 ## Music Master
 The original idea was to develop myself all the signal processing algorithms from scratch.
-While doing some research on the best ways to do this, I found the project from **. It is very similar to my project, with the difference that they focused more on the "Music Master" and signal processing and less on the slaves and the communication, whereas I actually wanted to focus more on the slaves and the communication.
+While doing some research on the best ways to do this, I found a very interesting project (see third party libraries). It is very similar to my project, with the difference that they focused more on the "Music Master" and signal processing and less on the slaves and the communication, whereas I actually wanted to focus more on the slaves and the communication.
 Therefore I decided to avoid reinventing the wheel and reuse their signal processing algorithms, which actually are way better than what I was expecting to do myself, and adapt them to my needs.
 That project puts all the effort and logic on the "Music Master", sending the whole LED information to the (single) slave. This would put too much overhead in the "Music Master" and in the network for my system, where the "Music Master" controls several slaves in music mode, and each one may receive music information from different frequency windows. Furthermore, the logic of my music effects is implemented in the slave code, to reduce the amount of information that needs to be sent.
 This means that I could get rid of their effect computation algorithms. Nevertheless I do not want to remove anything from the original code, rather only add whatever I need, because it can be useful for future improvements and because their GUI effects are awesome.
@@ -180,10 +178,10 @@ The main modifications done to the original code are the following:
 * Additional code is added to each effect in visualization.py to extract the useful information (color and amplitude) for our slaves.
 * A new udp_controller.py file implements a class to communicate via UDP with the slaves (multicast). Communication in led.py is removed.
 * A new mqtt_controller.py file implements a class to communicate via MQTT with the "System Master".
-* A new **.py file is the new "main". Implements the high level logic, handles communication (MQTT and UDP) and configures the signal processing in visualization.py.
+* A new super_lamp_network_master.py file is the new "main". Implements the high level logic, handles communication (MQTT and UDP) and configures the signal processing in visualization.py.
 * config.py is extended with my system specific configuration.
  
-<Diagram>
+![Alt text](Music_master_modifications.PNG)
 
 ## Slaves
 The slaves are no standalone devices, they must always have an open connection with a master. They could either be connected to the System Master (MQTT) or to the Music Master (UDP), the reason to have only one open connection at a time is to guarantee the best performance in music mode.
@@ -247,7 +245,6 @@ Please don't forget to add your own keys and device ID to the script. There are 
 ### Alexa compatibility (optional)
  * Create a system service for automatic start of the module after boot. (optional but recommended). It can also be started manually as a normal python script. It can be deployed in any machine connected to the network.
 
- 
 ## User guide
 Until now I have described what is possible and how things are done. Here I will explain more from a use perspective, how to use the lamps:
 
@@ -293,6 +290,10 @@ For what I have tested and implemented, it is possible to say:
 ## Demo
 
 
+## Known issues
+* With 6 lamps, the UDP packet losses in Music Mode are quite large and therefore, the lamp effects may not look as synchronized as with fewer lamps.
+* The AsyncUDP library does not offer an implementation to leave a UDP multicast group. This means that once a lamp has joined the UDP multicast group (has been at least once in Music Mode), it will always be part of this group until reboot, which means that it will receive the music effect messages even if it is not switched again to Music Mode.
+* Very rarely the lamp loses reponsivity (cant't be controlled with MQTT) but it does not reboot. This means that it either still receives the alive messages but does not respond to the other MQTT commands, or it gets stuck in a loop where it does not evaluate the alive check. I am still trying to figure out the reason.
 
 ## Future improvements
 * Remove hard-coded logic from Node-Red: create system description file where the MAC-ID mapping is described, lamp names, Alive communication delays...
