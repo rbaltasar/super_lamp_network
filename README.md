@@ -46,22 +46,22 @@ Not all effects depend on all those parameters, and for some effects, a right pa
 
 | Effect name |	Parameter	|
 | ------------ |------------ |
-| RGB loop | Lamp color: base color for the fade effect |
+| RGB loop | **Lamp color**: base color for the fade effect |
 | Fade in out | - |
-| Strobe | Speed: toggle frequency for a sequence of 50 toggles <br> Delay: delay between sequences <br> Lamp color: color |
-| Fire | Speed: speed of the fire |
+| Strobe | **Speed**: toggle frequency for a sequence of 50 toggles <br> **Delay**: delay between sequences <br> **Lamp color**: color |
+| Fire | **Speed**: speed of the fire |
 | Haloween eyes | Effect in development |
-| Cyclon bounce | Speed: speed of the bar <br> Delay: delay between repetitions <br> Color: bar color |
-| Twinkle | Speed: duration time of each point <br> Color: color of the point |
-| Twinkle random | Speed: duration time of each point |
-| Sparkle | Speed: generation/removal speed of the points <br> Color: color of (new) points |
-| Snow sparkle | Speed: duration time of each point <br> Delay: delay between generation/removal of points <br> Color: background color |
-| Running lights | Speed: shifting speed <br> Color: color of the bars |
+| Cyclon bounce | **Speed**: speed of the bar <br> **Delay**: delay between repetitions <br> **Lamp Color**: bar color |
+| Twinkle | **Speed**: duration time of each point <br> **Lamp Color**: color of the point |
+| Twinkle random | **Speed**: duration time of each point |
+| Sparkle | **Speed**: generation/removal speed of the points <br> **Lamp Color**: color of (new) points |
+| Snow sparkle | **Speed**: duration time of each point <br> **Delay**: delay between generation/removal of points <br> **Lamp Color**: background color |
+| Running lights | **Speed**: shifting speed <br> **Lamp Color**: color of the bars |
 | Color wipe | Effect in development |
-| Rainbow cycle | Speed: shifting speed of the rainbow |
+| Rainbow cycle | **Speed**: shifting speed of the rainbow |
 | Theater chase | Effect in development |
 | Theater chase rainbow | Effect in development |
-| Bouncing balls | Delay: IMPORTANT: this is the starting number of balls and also the maximum. This value must be set before entering this mode and may only be reduced within. You may exit the mode, increase the value and enter back again. Tested only with up to 20 balls. <br> Color: base color to generate ball colors |
+| Bouncing balls | **Delay**: IMPORTANT: this is the starting number of balls and also the maximum. This value must be set before entering this mode and may only be reduced within. You may exit the mode, increase the value and enter back again. Tested only with up to 20 balls. <br> **Lamp Color**: base color to generate ball colors |
 | Meteor rain | Effect in development |
 | Fade to black | Effect in development |
 
@@ -133,17 +133,17 @@ The following table shows the full MQTT interface description:
 
 | Message type |	MQTT topic	| Message direction | Message content (json format) |
 | ------------ |------------ |------------ |------------ |
-| Mode selection | lamp_network/mode_request | System Master --> Slave <br> System Master --> Music Master| mode: target mode <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
-| Brightness | lamp_network/light_intensity | System Master --> Slave | intensity: ?? <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
-| Effect delay | lamp_network/effect_delay | System Master --> Slave |delay: ?? [0-100] tens of milliseconds <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
-| Effect speed | lamp_network/effect_speed | System Master --> Slave | speed: ?? [0-100] ?? <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
-| Light color | lamp_network/light_color | System Master --> Slave | R: red contribution [0-255] <br> G: green contribution [0-255] <br> B: blue contribution [0-255] <br> id_mask: identification of the target nodes [0x00 - 0xFF] |
-| Init comm Tx | lamp_network/initcomm_tx | Slave --> System Master | mac: slave's MAC address (unique identifier) <br> ip: slave's IP address <br> rst_0: reset reason core 0 <br> rst_1: reset reason core 1 |
-| Init comm Rx | lamp_network/initcommrx | System Master --> Slave | mac: MAC address of the target slave <br> id: unique ID of the slave <br> mode: mode to switch after init complete |
-| Alive Tx | lamp_network/alive_tx | Slave --> System Master | id: unique ID of the slave |
+| Mode selection | lamp_network/mode_request | System Master --> Slave <br> System Master --> Music Master| **mode**: target mode <br> **id_mask**: identification of the target nodes [0x00 - 0xFF] |
+| Brightness | lamp_network/light_intensity | System Master --> Slave | **intensity**: lamp intensity [0-10]<br> **id_mask**: identification of the target nodes [0x00 - 0xFF] |
+| Effect delay | lamp_network/effect_delay | System Master --> Slave |**delay**: see static effects [0-100] tens of milliseconds <br> **id_mask**: identification of the target nodes [0x00 - 0xFF] |
+| Effect speed | lamp_network/effect_speed | System Master --> Slave |**speed**: see static effects [0-100] <br> **id_mask**: identification of the target nodes [0x00 - 0xFF] |
+| Light color | lamp_network/light_color | System Master --> Slave | **R**: red contribution [0-255] <br> **G**: green contribution [0-255] <br> **B**: blue contribution [0-255] <br> **id_mask**: identification of the target nodes [0x00 - 0xFF] |
+| Init comm Tx | lamp_network/initcomm_tx | Slave --> System Master | **mac**: slave's MAC address (unique identifier) <br> **ip**: slave's IP address <br> **rst_0**: reset reason core 0 <br> **rst_1**: reset reason core 1 |
+| Init comm Rx | lamp_network/initcommrx | System Master --> Slave | **mac**: MAC address of the target slave <br> **id**: unique ID of the slave <br> **mode**: mode to switch after init complete |
+| Alive Tx | lamp_network/alive_tx | Slave --> System Master | **id**: unique ID of the slave |
 | Alive Rx | lamp_network/alive_rx | System Master --> Slave | empty message |
-| Light amount | livingroom_node/light | 3rd party light sensor --> Slave | light: light amount in Lx |
-| Music configuration | lamp_network_music/configuration | System Master --> Music Master | update_rate: effect update rate in the slave <br> effect_direction: direction of the effect <br> num_lamps: number of Slaves <br> num_freq_windows: number of windows to split the spectrum <br> base_color_r: red contribution base color <br> base_color_g: green contribution base color <br> base_color_b: blue contribution base color <br> color_increment: single step for color generation <br> effect_type: signal processing method <br> freq_window_1: window for slave 1 <br> freq_window_2: window for slave 2 <br> freq_window_3: window for slave 3 <br> freq_window_4: window for slave 4 <br> freq_window_5: window for slave 5 <br> freq_window_6: window for slave 6 |
+| Light amount | livingroom_node/light | 3rd party light sensor --> Slave | **light**: light amount in Lx |
+| Music configuration | lamp_network_music/configuration | System Master --> Music Master |**update_rate**: effect update rate in the slave <br> **effect_direction**: direction of the effect <br> **num_lamps**: number of Slaves <br> **num_freq_windows**: number of windows to split the spectrum <br> **base_color_r**: red contribution base color <br> **base_color_g**: green contribution base color <br> **base_color_b**: blue contribution base color <br> **color_increment**: single step for color generation <br> **effect_type**: signal processing method <br> **freq_window_1**: window for slave 1 <br> freq_window_2: window for slave 2 <br> freq_window_3: window for slave 3 <br> **freq_window_4**: window for slave 4 <br> **freq_window_5**: window for slave 5 <br> **freq_window_6**: window for slave 6 |
 
 Please note that the message direction is just how it is used currently in the project, but any MQTT client connected to your network could subscribe/publish those topics to extend or add current features (e.g: a node that checks for rain on the internet and when it is raining, switch the lamps to blue, why not?).
 
