@@ -282,7 +282,7 @@ Until now I have described what is possible and how things are done. Here I will
 Be aware that music mode is entered via mode switch and therefore, only the slaves in group control will switch to this mode.
 * To exit music mode, just select the target effect in either of the mode widgets.
 
-5. **Alexa control**
+5. **Alexa control** <br>
 For what I have tested and implemented, it is possible to say:
 * Alexa, switch the lamps ON/OFF (this is also useful to exit music mode without using the Dashboard).
 * Alexa, switch ON music mode. This will set the lamps in "Bars Color" mode, with "Energy" method and a pre-defined configuration parameters that are ready to start immediately displaying the effects with no further configuration.
