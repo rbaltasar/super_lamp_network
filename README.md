@@ -46,7 +46,7 @@ The configuration parameters on which the static effects depend are <list of par
 Not all effects depend on all those parameters, and for some effects, a right parameter is mandatory. The following table shows the current available effects and their parameters:
 <List of static effects>
 
-Most of these effects are based on the effect library <effect library> but refactored in an "asynchronous blynk" style to avoid blocking calls.
+Most of these effects are based on the third party effect library (see third party libraries) but refactored in an "asynchronous blynk" style to avoid blocking calls.
 
 
 ### Music effects functionality
@@ -136,13 +136,14 @@ Thanks to the multicast functionality, we can define a UDP multicast group to wh
 Unfortunately, the advantages of this protocol comes at a price. UDP multicast with WiFi is known to have quite a high packet loss rate, which will make the lamps to seem to be unsynchronized with each other. To reduce the impact of this, each message is sent several times, to ensure that at least one of those packets is received in all the slaves.
 For color streaming messages (payload messages), I have seen that sending them 4 times with a very small delay between them gives a good compromise between performance and quality. Although sometimes all the 4 packets may not arrive at the destination, it happens so rarely that it is not often appreciated in the final effect and therefore, acceptable.
 For configuration or mode change messages, I really need all the slaves to receive them, as otherwise the system will collapse (some slaves listening to UDP, some others to MQTT...). To ensure this, whenever a configuration or mode change message has to be sent, there is a noticeable delay before, to reduce the network load, and then the same message is sent up to 8 times. This reduces the real-time effect of the system until the configuration procedure is complete.
-This mentioned procedure, to overcome the network losses, comes also at a price. The Raspberry Pi 4 generates between 30 and 40 payload messages per second, which implies 40*4 = 160 UDP messages per second. If your router internally does a multicast-unicast conversion, then you are sending 160*N UDP messages per second. In my case with 6 lamps rocking, there are almost 1000 UDP messages / s being sent in your network.
+This mentioned procedure, to overcome the network losses, comes also at a price. The Raspberry Pi 4 generates between 30 and 40 payload messages per second, which implies 40x4 = 160 UDP messages per second. If your router internally does a multicast-unicast conversion, then you are sending 160xN UDP messages per second. In my case with 6 lamps rocking, there are almost 1000 UDP messages / s being sent in your network.
 With my personal setup (router type, router position, number of clients connected to the router...) I appreciate almost no performance issue with 4 lamps in Music Mode and one WiFi speaker playing music. To that setup I also added my TV straming 4K from Netflix via Ethernet cable, without any problem. BUT if you add more load to the wireless network (e.g: 4K Streaming via WiFi, Whatsapp call, additional WiFi speakers synchronized with each other...) then you will immediately appreciate that you are putting your router into some stress.
 If you play with Music Mode while your partner tries to talk with someone via Whatsapp web, assume the consequences :)
 
 Although the UDP communication is very stable, same alive procedure has been implemented as with MQTT, to ensure a reboot in case of error and to inform the user of what lamps are available in Music Mode.
 
 The following table shows the full UDP interface description:
+
 | Message type |	Message description (byte stream - in order). 1 byte per parameter |
 | ------------ | ------------ |
 | Mode selection | message_id: Change the mode in the slaves. Val: 0x00 <br> mode: target mode |
@@ -150,6 +151,7 @@ The following table shows the full UDP interface description:
 | Payload single | message_id: Current music-color information with single payload. Val: 0x04 <br> mask: identification of the target nodes <br> r: red contribution <br> g: green contribution <br> b: blue contribution <br> ampl: amplitude |
 | Payload multiple | message_id: Current music-color information with one payload for each slave. Val: 0x05 <br> size: number of payloads <br> payload (r,g,b,ampl)[size]: array of payloads addressed to different lamps |
 | Configuration | message_id: Configuration message. Val: 0x07 <br> update_rate: effect update rate in the slave <br> effect_direction: direction of the effect <br> r: red contribution base color <br> g: green contribution base color <br> b: blue contribution base color <br> increment: single step for color generation |
+| Alive check (Rx) | node_id: Unique identifier of the sender node |
 
 
 ## System Master - User Interface
