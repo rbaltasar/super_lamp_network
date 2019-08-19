@@ -27,6 +27,8 @@ The system will consist of 1 System Master, 1 Music Master and N Slaves.
 System Master and Music Master can be deployed on the same machine or on separate ones.
 All the components must be connected to the same local network.
 
+![Alt text](System_design.png)
+
 ## System functionality
 This section explains what the system can do from the user point of view. A more detailed explanation of why and how is done in the next sections.
 
