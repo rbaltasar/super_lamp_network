@@ -27,7 +27,7 @@ The system will consist of 1 System Master, 1 Music Master and N Slaves.
 System Master and Music Master can be deployed on the same machine or on separate ones.
 All the components must be connected to the same local network.
 
-![Alt text](System_design.PNG)
+![Alt text](System_design.png)
 
 ## System functionality
 This section explains what the system can do from the user point of view. A more detailed explanation of why and how is done in the next sections.
@@ -42,11 +42,29 @@ In 99% of the cases, the slaves will be used as normal lamps. There are 3 standa
 A group of slaves can be configured to display a hard-coded effect that will only depend on its configuration parameters.
 The configuration parameters of any effect can be modified at any time (before and during the execution of the effect).
 The effects are executed continuously until another mode is requested.
-The configuration parameters on which the static effects depend are <list of parameters>.
 Not all effects depend on all those parameters, and for some effects, a right parameter is mandatory. The following table shows the current available effects and their parameters:
-<List of static effects>
+| Effect name |	Parameter	|
+| ------------ |------------ |
+| RGB loop | Lamp color: base color for the fade effect |
+| Fade in out | - |
+| Strobe | Speed: toggle frequency for a sequence of 50 toggles <br> Delay: delay between sequences <br> Lamp color: color |
+| Fire | Speed: speed of the fire |
+| Haloween eyes | Effect in development |
+| Cyclon bounce | Speed: speed of the bar <br> Delay: delay between repetitions <br> Color: bar color |
+| Twinkle | Speed: duration time of each point <br> Color: color of the point |
+| Twinkle random | Speed: duration time of each point |
+| Sparkle | Speed: generation/removal speed of the points <br> Color: color of (new) points |
+| Snow sparkle | Speed: duration time of each point <br> Delay: delay between generation/removal of points <br> Color: background color |
+| Running lights | Speed: shifting speed <br> Color: color of the bars |
+| Color wipe | Effect in development |
+| Rainbow cycle | Speed: shifting speed of the rainbow |
+| Theater chase | Effect in development |
+| Theater chase rainbow | Effect in development |
+| Bouncing balls | Delay: IMPORTANT: this is the starting number of balls and also the maximum. This value must be set before entering this mode and may only be reduced within. You may exit the mode, increase the value and enter back again. Tested only with up to 20 balls. <br> Color: base color to generate ball colors |
+| Meteor rain | Effect in development |
+| Fade to black | Effect in development |
 
-Most of these effects are based on the third party effect library (see third party libraries) but refactored in an "asynchronous blynk" style to avoid blocking calls.
+Most of these effects are based on the third party effect library (see third party libraries) but refactored in an "asynchronous blynk" style to avoid blocking calls. For a better description of the effect, see the original library (or just try it out!)
 
 
 ### Music effects functionality
@@ -101,7 +119,7 @@ For a more detailed explanation of how the effects work, see the slave section.
 ### MQTT communication
 MQTT is used for communication between System Master - Music Master and System Master - Slaves. It is used for control and configuration messages.
 This communication protocol has been chosen due to its flexibility, scalability and simplicity. All the logic, abstracted to us, is implemented in the broker. All the information that the clients need to know is the broker IP address and port. This allows a very easy escalation of the network, as new clients may be added without any SW modification (communication-wise).
-MQTT, based on TCP/IP transport protocol, guarantees message delivery (if communication is open) with different QoS (although only QoS 0 is available at the ESP32 with the PubSubClient library). 
+MQTT, based on TCP/IP transport protocol, guarantees message delivery (if communication is open) with different QoS (although only QoS 0 is available at the ESP32 with the PubSubClient library).
 This also allows the system to subscribe to third party events (e.g: light sensor, entrance sensor), giving many possibilities for automation.
 Unfortunately not everything is perfect, and I have observed that the used MQTT library is not 100% stable for the ESP32 (they even mention that in their documentation). This instability is not seen, for example, in the MQTT communication between the System Master and the Music Master.
 This instability implies that, if the system is required to be "responsive" all the time, some additional handling is done at the application level. For this, two protocols are implemented:
@@ -109,7 +127,7 @@ This instability implies that, if the system is required to be "responsive" all 
   The Slave keeps publishing until a response addressed to this node is received. If no response is received within a minute, the ESP32 will reboot and start again the procedure. The Slave is not ready to be used until this procedure is completed.
 * Alive check: usually once the first communication is established, the library handles it well. Nevertheless it might happen that the communication breaks and the library does not manage to reconnect. To handle this at the application level, the System Master publishes alive events periodically. The Slaves are responsible for checking periodically if these events have arrived within an expected time frame, if they have not arrived, a communication loss is assumed and the Slave will reboot.
   The Slave also publishes periodically its own Alive message, but this is merely for giving feedback to the user in the Dashboard of what Slaves are online.
-  
+
 The following table shows the full MQTT interface description:
 
 | Message type |	MQTT topic	| Message direction | Message content (json format) |
@@ -162,10 +180,14 @@ Although for this project both the back-end and front-end are developed with Nod
 For simplicity (and lack of experience with GUIs), the Node-Red dashboard is used as main app to control the system. It is not the best choice for this kind of application, as it is not flexible enough to dynamically define new lamps and the amount of widgets is very limited. A possible improvement for the project would be to create a dedicated App that allows better interaction with the system.
 As the front-end is hard-coded, it does not make sense to have a very flexible and generic back-end, therefore currently it is hard-coded as well. An improvement in the front-end will of course imply a re-work in the back-end (lamp configuration, ID assignment, initial state...).
 
-The System Master and the Music Master can be deployed on the same physical machine or different ones. If you start from scratch, I would recommend to use the same machine (Raspberry Pi) for simplicity. In my case, I already had a home automation setup running with Node-Red ona RaspberryPi 3, so I just extended it with the System Master Nodes (<names>).
+The System Master and the Music Master can be deployed on the same physical machine or different ones. If you start from scratch, I would recommend to use the same machine (Raspberry Pi) for simplicity. In my case, I already had a home automation setup running with Node-Red ona RaspberryPi 3, so I just extended it with the System Master Nodes (main_control, music_effects).
 
 Please note that, as described above, the Slaves stop the MQTT communication when they switch to music mode, and therefore in this mode they are fully controlled by the Music Master. Any action that is not forwarded from the Music Master (e.g: change brightness) will be ignored.
 Please also note that MQTT communication requires a MQTT broker. This is not part of the System Master and needs to be accessible in the local network. For simplicity, it is installed in the same machine where Node-Red runs.
+
+![Alt text](Main_control.png)
+
+![Alt text](Music_effects.png)
 
 ## Music Master
 The original idea was to develop myself all the signal processing algorithms from scratch.
@@ -176,14 +198,14 @@ This means that I could get rid of their effect computation algorithms. Neverthe
 
 The main modifications done to the original code are the following:
 * microphone.py code encapsulated into a class. Added functionality to start and stop the sampling.
-* visualization.py is no longer the "main", it will be configured and controled by **.
+* visualization.py is no longer the "main", it will be configured and controled by super_lamp_network_master.py.
 * Additional code is added to each effect in visualization.py to extract the useful information (color and amplitude) for our slaves.
 * A new udp_controller.py file implements a class to communicate via UDP with the slaves (multicast). Communication in led.py is removed.
 * A new mqtt_controller.py file implements a class to communicate via MQTT with the "System Master".
 * A new super_lamp_network_master.py file is the new "main". Implements the high level logic, handles communication (MQTT and UDP) and configures the signal processing in visualization.py.
 * config.py is extended with my system specific configuration.
- 
-![Alt text](Music_master_modifications.PNG)
+
+![Alt text](Music_master_modifications.png)
 
 ## Slaves
 The slaves are no standalone devices, they must always have an open connection with a master. They could either be connected to the System Master (MQTT) or to the Music Master (UDP), the reason to have only one open connection at a time is to guarantee the best performance in music mode.
@@ -201,8 +223,7 @@ Slave mode range description:
   * OFF: the leds are completely switched off.
   * ON: the slave acts as a normal lamp. Int this mode, color and intensity can be configured.
   * AMBIENT_LIGHT: the lamp brightness is inversely proportional to the amount of light. This relies on receiving a light amount message from a third party device (see message description).
-* Static effects [10-99]: these are fixed effects that depend only on the configuration parameters (effect delay, effect speed, color...). They are not blocking, and switching between effects can be done at any time. For simplicity, only the effects with a special behavior are explained:
-  * <Define>
+* Static effects [10-99]: these are fixed effects that depend only on the configuration parameters (effect delay, effect speed, color...). They are not blocking, and switching between effects can be done at any time.
 * Music effects [>99]: these effects depend on music information (amplitude, color, mask) broadcasted by the Music Master via UDP. The effects can also be configured with effect direction (Up, Down, In-Out, Out-In), refreshment rate, base color...:
   * Bubble effect: bubbles of color are shifted in the configured direction with the configured speed. The color, size and speed depend on the music.
   * Bars: a block of leds is switched ON/OFF depending on the music. The amount of leds depends on the amplitude and the color depends on the frequency.
@@ -237,7 +258,7 @@ Please don't forget to add your own keys and device ID to the script. There are 
 ### Slaves installation
  * Get ready your Arduino environment to flash the code to the ESP32(s). This is only needed for the first time you flash the code (see below). Link to tutorial to do this?
  * Configure in the source code (OTA Updater) the Username and Password for the OTA software update.
- * Add your personal configuration to the source code (config.h): networking must match with the Music Master, MQTT broker config, debug traces, timing... 
+ * Add your personal configuration to the source code (config.h): networking must match with the Music Master, MQTT broker config, debug traces, timing...
  * Flash the code to your ESP32.
  * For further flashing with OTA:
    * Use a web browser to access the URL of your slave. By default the url is "http://lamp<id>.local". E.g("http:/lamp1.local"). Where the ID is the unique identifier assigned to the ESP32 MAC address and shared through Init Comm.
@@ -299,9 +320,5 @@ For what I have tested and implemented, it is possible to say:
 
 ## Future improvements
 * Remove hard-coded logic from Node-Red: create system description file where the MAC-ID mapping is described, lamp names, Alive communication delays...
-
-
-
-
-
-
+* Right now, any mode change request to any lamp, even if it is not in music mode, will exit music node for all the lamps. The improvement should switch only the current selected lamp and keep the music node ON as long as there are still lamps in this mode.
+* Finish the non-completed static effects.
