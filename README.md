@@ -43,6 +43,7 @@ A group of slaves can be configured to display a hard-coded effect that will onl
 The configuration parameters of any effect can be modified at any time (before and during the execution of the effect).
 The effects are executed continuously until another mode is requested.
 Not all effects depend on all those parameters, and for some effects, a right parameter is mandatory. The following table shows the current available effects and their parameters:
+
 | Effect name |	Parameter	|
 | ------------ |------------ |
 | RGB loop | Lamp color: base color for the fade effect |
