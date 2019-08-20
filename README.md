@@ -237,6 +237,13 @@ This repository contains a link to the Alexa node. This node controls some other
 For simplicity I control the lamps as a group, but it is of course possible to simulate with Sinric one device for each lamp you have. You could then extend the Alexa node to independently control per voice each lamp.
 Please don't forget to add your own keys and device ID to the script. There are many great tutorials on the internet to do this.
 
+## Third party devices
+Using the described communication interface, any device connected to the WiFi network can communicate with our system and trigger changes upon its own state, giving endless possibilities for automation. A few examples I have implemented are:
+* Ambient Light: a device takes measurements of the ambient light and publishes the value on the ambient light topic. If the lamps are in this mode, they will increas or decrease their lighting depending on  the ambient light. Very useful to have a minimum amount of light in your room while not wasting energy.
+* Mode change upon entrance event: a device monitors the entrance to the apartment. When someone enters the apartment and the lamps are in OFF state, a transition to Ambient Light will be triggered. By this way, if it is dark, the room will immediately illuminate, otherwise, the lamps will remain off until it is dark enough.
+* Mode change upon apartment empty: a device monitors presence of the tenants. If no presence is detected for a while, it will trigger a transition to OFF state.
+* Lamp notifications: a device tracks some kind of event that I want to be informed about (in my case, when my washing machine, placed in the basement, finished). When the event happens, the tracker device will trigger a transition to ON to a specific lamp and then change the color to a light red, making me aware of the event.
+
 ## Installation and configuration
 ### System Master installation
  * Installation of Node Red (<link>)
